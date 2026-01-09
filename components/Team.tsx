@@ -16,7 +16,7 @@ const masters = [
     { id: 1, name: "Master Jai kumar Kannan", role: "Head Instructor", img: "/assets/masters/jaimaster.jpg", info: "5th Dan Black Belt" },
     { id: 2, name: "Master Nilesh Jalnawala", role: "Senior Coach", img: "/assets/masters/nilesh master.jpg", info: "4th Dan Black Belt" },
     { id: 3, name: "Master Kumar Imam", role: "Senior Instructor", img: "/assets/masters/kumarimam.jpg", info: "Senior Instructor" },
-    { id: 4, name: "Master Balendra", role: "Instructor", img: "/assets/masters/WhatsApp Image 2026-01-09 at 18.46.59.jpeg", info: "Instructor" },
+    { id: 4, name: "Master Balendra", role: "Instructor", img: "/assets/masters/balendramaster.jpg", info: "Instructor" },
     { id: 5, name: "Master Kumar", role: "Instructor", img: "", info: "Instructor" },
 ];
 
