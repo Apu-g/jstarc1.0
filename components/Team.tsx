@@ -40,32 +40,30 @@ const memberData = [
 
 // --- Custom Hook for 3D Orbit Physics ---
 // Added randomness to visual parameters for organic feel
-const useOrbit = (idx: number, total: number, radiusX: number, radiusY: number, speed: number, yOffset: number, phaseOffset: number, isMobile: boolean) => {
-    const time = useTime();
-    // Increase speed base for "bit faster" feel
-    const adjustedSpeed = isMobile ? speed * 1.2 : speed;
-    const smoothTime = useTransform(time, [0, 100000], [0, 1000 * adjustedSpeed], { clamp: false });
-
-    // Offset each item
-    const initialAngle = (idx / total) * Math.PI * 2 + phaseOffset;
+// --- Custom Hook for 3D Orbit Physics ---
+// Added randomness to visual parameters for organic feel
+const useOrbit = (idx: number, total: number, radiusX: number, radiusY: number, speed: number, yOffset: number, phaseOffset: number, isMobile: boolean, rotationOffset: number) => {
+    // Offset each item with manual rotation
+    const initialAngle = (idx / total) * Math.PI * 2 + phaseOffset + rotationOffset;
 
     // Reduce scale on mobile
     const currentRadiusX = isMobile ? radiusX * 0.5 : radiusX;
     const currentRadiusY = isMobile ? radiusY * 0.6 : radiusY;
 
-    const x = useTransform(smoothTime, (t) => Math.cos(t / 10000 + initialAngle) * currentRadiusX);
-    const z = useTransform(smoothTime, (t) => Math.sin(t / 10000 + initialAngle)); // Z-depth (-1 to 1)
+    // Use pure math for position based on rotation
+    const x = Math.cos(initialAngle) * currentRadiusX;
+    const z = Math.sin(initialAngle); // Z-depth (-1 to 1)
 
     // Y position simulates "tilt" plus random scatter
-    const y = useTransform(z, (v) => (v * currentRadiusY * 0.2) + (isMobile ? yOffset * 0.6 : yOffset));
+    const y = (z * currentRadiusY * 0.2) + (isMobile ? yOffset * 0.6 : yOffset);
 
     // Scale calculation based on Z (perspective) - More dramatic range
-    const scale = useTransform(z, [-1, 1], [0.4, 1.4]);
-    const opacity = useTransform(z, [-1, 1], [0.2, 1]);
-    const blur = useTransform(z, [-1, 1], ["6px", "0px"]);
-    const zIndex = useTransform(z, (v) => Math.round(v * 100));
+    const scale = (z + 2) / 3 * (isMobile ? 0.8 : 1.2); // Simple perspective scale
+    const opacity = (z + 1.2) / 2.2; // Fade in back
+    // const blur = z < 0 ? Math.abs(z) * 5 + "px" : "0px"; // Manual blur calc if needed, or use CSS
+    const zIndex = Math.round(z * 100);
 
-    return { x, y, scale, opacity, blur, zIndex };
+    return { x, y, scale, opacity, zIndex };
 };
 
 // --- Cinematic Spiral / Vortex Hero ---
@@ -80,6 +78,9 @@ const CinematicSpiral = () => {
     }, []);
 
     const [orbiters, setOrbiters] = useState<any[]>([]);
+    const [rotation, setRotation] = useState(0);
+    const interactionRef = useRef<HTMLDivElement>(null);
+    const touchStartRef = useRef<number | null>(null);
 
     useEffect(() => {
         const base = [...memberData, ...memberData, ...memberData];
@@ -93,6 +94,38 @@ const CinematicSpiral = () => {
         }));
         setOrbiters(generated);
     }, []);
+
+    // Handle Wheel Rotation
+    useEffect(() => {
+        const element = interactionRef.current;
+        if (!element) return;
+
+        const handleWheel = (e: WheelEvent) => {
+            e.preventDefault();
+            setRotation(prev => prev + e.deltaY * 0.002);
+        };
+
+        // Non-passive listener to allow preventDefault
+        element.addEventListener('wheel', handleWheel, { passive: false });
+        return () => element.removeEventListener('wheel', handleWheel);
+    }, []);
+
+    // Handle Touch Rotation
+    const handleTouchStart = (e: React.TouchEvent) => {
+        touchStartRef.current = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        if (touchStartRef.current === null) return;
+        const currentY = e.touches[0].clientY;
+        const delta = touchStartRef.current - currentY;
+        setRotation(prev => prev + delta * 0.005);
+        touchStartRef.current = currentY;
+    };
+
+    const handleTouchEnd = () => {
+        touchStartRef.current = null;
+    };
 
     return (
         <div className="relative w-full min-h-[90vh] overflow-hidden flex flex-col md:flex-row items-center justify-center bg-black">
@@ -120,22 +153,29 @@ const CinematicSpiral = () => {
 
             {/* Visual Centerpiece */}
             <div className="relative w-full md:w-2/3 h-[600px] md:h-[800px] flex items-center justify-center perspective-1000">
-                {/* Central Anchor: The Master */}
-                <div className="relative z-20 w-[400px] h-[600px] flex items-center justify-center">
+                {/* Central Anchor: The Master (INTERACTIVE ZONE) */}
+                <div
+                    ref={interactionRef}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                    className="relative z-20 w-[400px] h-[600px] flex items-center justify-center cursor-ew-resize touch-none"
+                    title="Scroll or Drag here to rotate"
+                >
                     {/* Core Glow */}
-                    <div className="absolute inset-0 bg-blue-600/20 blur-[100px] rounded-full animate-pulse opacity-50" />
+                    <div className="absolute inset-0 bg-blue-600/20 blur-[100px] rounded-full animate-pulse opacity-50 pointer-events-none" />
 
                     <img
                         src="/assets/central-master-kick.png"
                         alt="Central Master"
-                        className="relative h-full w-auto object-contain z-20 drop-shadow-[0_0_50px_rgba(59,130,246,0.4)]"
+                        className="relative h-full w-auto object-contain z-20 drop-shadow-[0_0_50px_rgba(59,130,246,0.4)] pointer-events-none"
                     />
                 </div>
 
                 {/* Orbiting Vortex System */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
                     {orbiters.map((orbiter: any, i) => (
-                        <Orbiter key={i} index={i} total={orbiters.length} config={orbiter} isMobile={isMobile} />
+                        <Orbiter key={i} index={i} total={orbiters.length} config={orbiter} isMobile={isMobile} rotation={rotation} />
                     ))}
                 </div>
             </div>
@@ -143,8 +183,8 @@ const CinematicSpiral = () => {
     );
 };
 
-const Orbiter = ({ index, total, config, isMobile }: { index: number, total: number, config: any, isMobile: boolean }) => {
-    const { x, y, scale, opacity, blur, zIndex } = useOrbit(
+const Orbiter = ({ index, total, config, isMobile, rotation }: { index: number, total: number, config: any, isMobile: boolean, rotation: number }) => {
+    const { x, y, scale, opacity, zIndex } = useOrbit(
         index,
         total,
         config.radiusX,
@@ -152,7 +192,8 @@ const Orbiter = ({ index, total, config, isMobile }: { index: number, total: num
         config.speed,
         config.yOffset,
         config.phaseOffset,
-        isMobile
+        isMobile,
+        rotation
     );
 
     return (
@@ -164,8 +205,7 @@ const Orbiter = ({ index, total, config, isMobile }: { index: number, total: num
             {/* Trail or Glow */}
             <div className="absolute inset-0 rounded-full bg-red-500/10 blur-xl" />
 
-            <motion.div
-                style={{ filter: `blur(${blur.get()})` }}
+            <div
                 className="relative w-full h-full rounded-full border border-white/20 overflow-hidden shadow-[0_0_15px_rgba(255,255,255,0.1)] bg-black/50 backdrop-blur-sm"
             >
                 <img
@@ -173,7 +213,7 @@ const Orbiter = ({ index, total, config, isMobile }: { index: number, total: num
                     alt="Student"
                     className="w-full h-full object-cover opacity-90"
                 />
-            </motion.div>
+            </div>
         </motion.div>
     );
 };
