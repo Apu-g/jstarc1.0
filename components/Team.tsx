@@ -16,7 +16,7 @@ const masters = [
     { id: 1, name: "Master Jai kumar Kannan", role: "Head Instructor", img: "/assets/masters/jaimaster.jpg", info: "5th Dan Black Belt" },
     { id: 2, name: "Master Nilesh Jalnawala", role: "Senior Coach", img: "/assets/masters/nilesh master.jpg", info: "4th Dan Black Belt" },
     { id: 3, name: "Master Kumar Imam", role: "Senior Instructor", img: "/assets/masters/kumarimam.jpg", info: "Senior Instructor" },
-    { id: 4, name: "Master Balendra", role: "Instructor", img: "https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=600&auto=format&fit=crop", info: "Instructor" },
+    { id: 4, name: "Master Balendra", role: "Instructor", img: "", info: "Instructor" },
     { id: 5, name: "Master Kumar", role: "Instructor", img: "https://images.unsplash.com/photo-1583468982260-872d5c417b1d?q=80&w=600&auto=format&fit=crop", info: "Instructor" },
 ];
 
@@ -83,15 +83,32 @@ const CinematicSpiral = () => {
     const touchStartRef = useRef<number | null>(null);
 
     useEffect(() => {
-        const base = [...memberData, ...memberData, ...memberData];
-        const generated = base.map((member, i) => ({
-            ...member,
-            radiusX: 180 + Math.random() * 350,
-            radiusY: 40 + Math.random() * 120,
-            speed: 15 + Math.random() * 15,
-            yOffset: (Math.random() - 0.5) * 300,
-            phaseOffset: Math.random() * Math.PI * 2,
-        }));
+        // Flatten the data into a single array loop
+        // We want 3 distinct orbits. 
+        // We will distribute the images round-robin style into orbit 0, 1, 2
+        const base = [...memberData, ...memberData]; // 20 items enough? 
+
+        const generated = base.map((member, i) => {
+            const orbitIndex = i % 3; // 0, 1, 2
+            let orbitAngle = 0;
+            if (orbitIndex === 0) orbitAngle = 0;    // Horizontal-ish? Or Flat?
+            if (orbitIndex === 1) orbitAngle = 60;
+            if (orbitIndex === 2) orbitAngle = 120; // Or -60
+
+            // Add some "Index on Track" logic so they don't all start at 0
+            // Total items per track approx length/3
+            // We just use 'i' phase offset but aligned to the track
+
+            return {
+                ...member,
+                radiusX: 300, // Fixed large radius
+                radiusY: 80,  // Flattening factor
+                orbitAngle: orbitAngle,
+                speed: 1, // Controlled globally by scroll now
+                // Evenly space them along the track
+                phaseOffset: (i * (Math.PI * 2) / base.length) * 3, // Multiply by 3 to spread across full circle for this track
+            };
+        });
         setOrbiters(generated);
     }, []);
 
@@ -177,6 +194,11 @@ const CinematicSpiral = () => {
                     {orbiters.map((orbiter: any, i) => (
                         <Orbiter key={i} index={i} total={orbiters.length} config={orbiter} isMobile={isMobile} rotation={rotation} />
                     ))}
+
+                    {/* Optional: Visual Orbit Tracks (Lines) for debugging/Aesthetics */}
+                    <OrbitTrack angle={0} isMobile={isMobile} />
+                    <OrbitTrack angle={60} isMobile={isMobile} />
+                    <OrbitTrack angle={120} isMobile={isMobile} />
                 </div>
             </div>
         </div>
@@ -190,10 +212,10 @@ const Orbiter = ({ index, total, config, isMobile, rotation }: { index: number, 
         config.radiusX,
         config.radiusY,
         config.speed,
-        config.yOffset,
         config.phaseOffset,
         isMobile,
-        rotation
+        rotation,
+        config.orbitAngle
     );
 
     return (
@@ -215,6 +237,25 @@ const Orbiter = ({ index, total, config, isMobile, rotation }: { index: number, 
                 />
             </div>
         </motion.div>
+    );
+};
+
+// Helper to draw the faint orbit lines
+const OrbitTrack = ({ angle, isMobile }: { angle: number, isMobile: boolean }) => {
+    const radiusX = isMobile ? 300 * 0.6 : 300;
+    const radiusY = isMobile ? 80 * 0.6 : 80;
+
+    return (
+        <div
+            className="absolute border border-white/10 rounded-full pointer-events-none"
+            style={{
+                width: radiusX * 2,
+                height: radiusY * 2,
+                transform: `rotate(${angle}deg)`,
+                // We use box-shadow to create a faint glow
+                boxShadow: "0 0 20px rgba(59, 130, 246, 0.05)"
+            }}
+        />
     );
 };
 
@@ -380,7 +421,17 @@ export const Team = () => {
                 >
                     {extendedMasters.map((master, index) => (
                         <SwiperSlide key={`${master.id}-${index}`} className="!w-[300px] md:!w-[400px] !h-[550px] bg-zinc-900/80 backdrop-blur-md rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl">
-                            <img src={master.img} alt={master.name} className="h-full w-full object-cover" />
+                            {master.img ? (
+                                <img src={master.img} alt={master.name} className="h-full w-full object-cover" />
+                            ) : (
+                                <div className="h-full w-full flex flex-col items-center justify-center bg-zinc-800/50">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20 text-zinc-700 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                                        <circle cx="9" cy="9" r="2" />
+                                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                                    </svg>
+                                </div>
+                            )}
                             <div className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black/90 to-transparent">
                                 <h3 className="text-2xl font-bold">{master.name}</h3>
                                 <p className="text-red-500">{master.role}</p>
