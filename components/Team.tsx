@@ -36,23 +36,7 @@ const memberData = [
     { id: 10, name: "Student 10", rank: "Red Belt", desc: "Flexibility", img: "/assets/demo_team/95a0c19b-54d2-4252-82f3-17b986434ecd.jpg" },
 ];
 
-const DynamicGrid = () => {
-    return (
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-            <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black z-10" />
-            <div
-                className="absolute inset-0 opacity-20"
-                style={{
-                    backgroundImage: `
-                        linear-gradient(to right, #333 1px, transparent 1px),
-                        linear-gradient(to bottom, #333 1px, transparent 1px)
-                    `,
-                    backgroundSize: "60px 60px",
-                }}
-            />
-        </div>
-    );
-};
+
 
 // --- Custom Hook for 3D Orbit Physics ---
 // Added randomness to visual parameters for organic feel
@@ -320,7 +304,7 @@ export const Team = () => {
 
     return (
         <section id="team" className="relative py-24 bg-black text-white overflow-hidden">
-            <DynamicGrid />
+
 
             {/* Masters Carousel */}
             <div className="container mx-auto px-6 mb-20 relative z-10">
