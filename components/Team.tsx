@@ -41,29 +41,39 @@ const memberData = [
 // --- Custom Hook for 3D Orbit Physics ---
 // Added randomness to visual parameters for organic feel
 // --- Custom Hook for 3D Orbit Physics ---
-// Added randomness to visual parameters for organic feel
-const useOrbit = (idx: number, total: number, radiusX: number, radiusY: number, speed: number, yOffset: number, phaseOffset: number, isMobile: boolean, rotationOffset: number) => {
-    // Offset each item with manual rotation
-    const initialAngle = (idx / total) * Math.PI * 2 + phaseOffset + rotationOffset;
+// 3 Atomic Paths (0, 60, 120 degrees)
+const useOrbit = (idx: number, total: number, radiusX: number, radiusY: number, speed: number, phaseOffset: number, isMobile: boolean, rotationOffset: number, orbitAngle: number) => {
+    // Current position on the elliptical path
+    const currentTheta = (idx / total) * Math.PI * 2 + phaseOffset + rotationOffset;
 
-    // Reduce scale on mobile
-    const currentRadiusX = isMobile ? radiusX * 0.5 : radiusX;
-    const currentRadiusY = isMobile ? radiusY * 0.6 : radiusY;
+    // Mobile Size Adjustment
+    const mobileScale = isMobile ? 0.6 : 1;
+    const currentRx = radiusX * mobileScale;
+    const currentRy = radiusY * mobileScale;
 
-    // Use pure math for position based on rotation
-    const x = Math.cos(initialAngle) * currentRadiusX;
-    const z = Math.sin(initialAngle); // Z-depth (-1 to 1)
+    // 1. Calculate position on a FLAT ellipse (aligned with X-axis)
+    // We assume the ellipse is "tilted" towards us, so Y is compressed
+    const flatX = currentRx * Math.cos(currentTheta);
+    const flatY = currentRy * Math.sin(currentTheta); // Compressed Y
 
-    // Y position simulates "tilt" plus random scatter
-    const y = (z * currentRadiusY * 0.2) + (isMobile ? yOffset * 0.6 : yOffset);
+    // Fake "Depth" based on the Y position of the untilted ellipse (sin component)
+    // When sin(theta) is positive (bottom of screen in non-rotated), we call it "front"? 
+    // Let's optimize for visual crossing.
+    const zDepth = Math.sin(currentTheta); // -1 to 1
 
-    // Scale calculation based on Z (perspective) - More dramatic range
-    const scale = (z + 2) / 3 * (isMobile ? 0.8 : 1.2); // Simple perspective scale
-    const opacity = (z + 1.2) / 2.2; // Fade in back
-    // const blur = z < 0 ? Math.abs(z) * 5 + "px" : "0px"; // Manual blur calc if needed, or use CSS
-    const zIndex = Math.round(z * 100);
+    // 2. Rotate this ellipse on the SCREEN plane by 'orbitAngle'
+    // Standard 2D rotation matrix
+    const rad = (orbitAngle * Math.PI) / 180;
+    const finalX = flatX * Math.cos(rad) - flatY * Math.sin(rad);
+    const finalY = flatX * Math.sin(rad) + flatY * Math.cos(rad);
 
-    return { x, y, scale, opacity, zIndex };
+    // 3. Scale/Opacity/Z-Index based on "Depth"
+    // We assume the "front" of the loop is when zDepth is positive (passing "over" the nucleus)
+    const scale = (zDepth + 2) / 3 * (isMobile ? 0.7 : 1); // Scale 0.7 to 1.0 (approx)
+    const opacity = (zDepth + 1.5) / 2.5;
+    const zIndex = Math.round(zDepth * 100);
+
+    return { x: finalX, y: finalY, scale, opacity, zIndex };
 };
 
 // --- Cinematic Spiral / Vortex Hero ---
