@@ -24,16 +24,16 @@ const masters = [
 const extendedMasters = [...masters, ...masters, ...masters];
 
 const memberData = [
-    { id: 1, name: "Student 1", rank: "Black Belt", desc: "Gold Medalist", img: "/assets/demo_team/0d9384c0-5180-4fcd-8642-0154d01ffd98.jpg" },
-    { id: 2, name: "Student 2", rank: "Red Belt", desc: "Best Poomsae", img: "/assets/demo_team/11176fcd-c874-4638-aaf0-5d418879c21e.jpg" },
-    { id: 3, name: "Student 3", rank: "Blue Belt", desc: "Sparring Pro", img: "/assets/demo_team/36654309-50f4-481a-844f-72ae6cdaa7f4.jpg" },
-    { id: 4, name: "Student 4", rank: "Black Belt", desc: "Speed King", img: "/assets/demo_team/384974bc-7b49-4b59-a907-9b85b0a8444c.jpg" },
-    { id: 5, name: "Student 5", rank: "Red Belt", desc: "Forms Expert", img: "/assets/demo_team/4749097e-f4a3-4058-abf6-0db21f49730f.jpg" },
-    { id: 6, name: "Student 6", rank: "Red Belt", desc: "Demo Team Captain", img: "/assets/demo_team/4ffad43b-1786-40f0-a4e0-913402f4bb63.jpg" },
-    { id: 7, name: "Student 7", rank: "Blue Belt", desc: "Trick Kicking", img: "/assets/demo_team/6dba0c06-1f2e-43cf-b631-b5c5a994100e.jpg" },
-    { id: 8, name: "Student 8", rank: "Black Belt", desc: "Weapon Specialist", img: "/assets/demo_team/6e0036b0-6242-47fc-84e7-8f513f19f8f6.jpg" },
-    { id: 9, name: "Student 9", rank: "Blue Belt", desc: "Power Breaking", img: "/assets/demo_team/838698b2-ca30-4f72-8ce0-cee1346cd6ed.jpg" },
-    { id: 10, name: "Student 10", rank: "Red Belt", desc: "Flexibility", img: "/assets/demo_team/95a0c19b-54d2-4252-82f3-17b986434ecd.jpg" },
+    { id: 1, name: "name", rank: "Black Belt", desc: "", img: "/assets/demo_team/0d9384c0-5180-4fcd-8642-0154d01ffd98.jpg" },
+    { id: 2, name: "name", rank: "black Belt", desc: "Best Poomsae", img: "/assets/demo_team/11176fcd-c874-4638-aaf0-5d418879c21e.jpg" },
+    { id: 3, name: "name", rank: "black Belt", desc: "Sparring Pro", img: "/assets/demo_team/36654309-50f4-481a-844f-72ae6cdaa7f4.jpg" },
+    { id: 4, name: "name", rank: "Black Belt", desc: "Sparring", img: "/assets/demo_team/384974bc-7b49-4b59-a907-9b85b0a8444c.jpg" },
+    { id: 5, name: "name", rank: "black Belt", desc: "Expert", img: "/assets/demo_team/4749097e-f4a3-4058-abf6-0db21f49730f.jpg" },
+    { id: 6, name: "name", rank: "black Belt", desc: "kicking", img: "/assets/demo_team/4ffad43b-1786-40f0-a4e0-913402f4bb63.jpg" },
+    { id: 7, name: "name", rank: "Black  Belt", desc: "Kicking", img: "/assets/demo_team/6dba0c06-1f2e-43cf-b631-b5c5a994100e.jpg" },
+    { id: 8, name: "name", rank: "Black Belt", desc: "kick Specialist", img: "/assets/demo_team/6e0036b0-6242-47fc-84e7-8f513f19f8f6.jpg" },
+    { id: 9, name: "name", rank: "Black Belt", desc: "Power Breaking", img: "/assets/demo_team/838698b2-ca30-4f72-8ce0-cee1346cd6ed.jpg" },
+    { id: 10, name: "name", rank: "Red Belt", desc: "flexibility", img: "/assets/demo_team/95a0c19b-54d2-4252-82f3-17b986434ecd.jpg" },
 ];
 
 

@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import { Shield, Users, Award, Trophy, UserCheck, Medal } from "lucide-react";
 
 const stats = [
-    { id: 1, label: "Years of Operation", value: "15+", icon: Trophy },
-    { id: 2, label: "Students Trained", value: "500+", icon: UserCheck },
-    { id: 3, label: "Medals Won", value: "250+", icon: Medal },
+    { id: 1, label: "Years of Operation", value: "25+", icon: Trophy },
+    { id: 2, label: "Students Trained", value: "1500+", icon: UserCheck },
+    { id: 3, label: "Medals Won", value: "1000+", icon: Medal },
 ];
 
 const values = [

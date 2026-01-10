@@ -1,4 +1,4 @@
-"use client";
+  "use client";
 
 import { motion } from "framer-motion";
 
@@ -6,15 +6,15 @@ const masters = [
     {
         id: 1,
         name: "Master Jai kumar Kannan",
-        role: "5th Dan Black Belt",
-        desc: "Head instructor with over 20 years of experience.",
+        role: "6th Dan Black Belt",
+        desc: "Head instructor with over 20+ years of experience.",
         img: "/assets/masters/jaimaster.jpg"
     },
     {
         id: 2,
         name: "Master Nilesh Jalnawala",
-        role: "4th Dan Black Belt",
-        desc: "Specializes in children's programs and competitive poomsae.",
+        role: "8th Dan Black Belt",
+        desc: "competitive poomsae.",
         img: "/assets/masters/nilesh master.jpg"
     },
 ];
