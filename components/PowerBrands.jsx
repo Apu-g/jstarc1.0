@@ -5,6 +5,7 @@ import { Navigation, Autoplay } from 'swiper/modules';
 import { motion } from "framer-motion";
 import 'swiper/css';
 import 'swiper/css/navigation';
+import SpotlightCard from './SpotlightCard';
 
 const brands = [
     "/assets/logos/powerbrand1.jpg",
@@ -16,7 +17,7 @@ const brands = [
 
 export const PowerBrands = () => {
     return (
-        <section className="py-24 bg-black relative border-b border-white/5">
+        <section className="py-24 relative border-b border-white/5">
             <div className="container mx-auto px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -43,7 +44,7 @@ export const PowerBrands = () => {
                 >
                     {brands.map((src, index) => (
                         <SwiperSlide key={index} className="py-8">
-                            <div className="group relative h-64 flex items-center justify-center p-8 bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl hover:bg-white/10 transition-all duration-300 mx-4 shadow-lg hover:shadow-red-900/20">
+                            <SpotlightCard className="group relative h-64 flex items-center justify-center p-8 bg-white/5 backdrop-blur-sm border-white/10 rounded-3xl hover:bg-white/10 transition-all duration-300 mx-4 shadow-lg hover:shadow-red-900/20">
 
                                 {/* Inner pure white container for logo clarity */}
                                 <div className="w-48 h-48 bg-white rounded-2xl flex items-center justify-center p-6 shadow-2xl relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
@@ -53,7 +54,7 @@ export const PowerBrands = () => {
                                         className="max-w-full max-h-full object-contain mix-blend-multiply"
                                     />
                                 </div>
-                            </div>
+                            </SpotlightCard>
                         </SwiperSlide>
                     ))}
                 </Swiper>

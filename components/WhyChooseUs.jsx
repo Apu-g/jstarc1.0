@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Users, Calendar, Medal } from "lucide-react";
+import SpotlightCard from "./SpotlightCard";
 
 const features = [
     {
@@ -26,7 +27,7 @@ const features = [
 
 export const WhyChooseUs = () => {
     return (
-        <section className="py-24 bg-zinc-950 text-white relative overflow-hidden">
+        <section className="py-24 text-white relative overflow-hidden">
             <div className="container mx-auto px-6 relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -46,15 +47,16 @@ export const WhyChooseUs = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: false }}
                             transition={{ delay: index * 0.2, duration: 0.6 }}
-                            className="bg-zinc-900 border border-zinc-800 p-8 rounded-3xl text-center hover:border-red-600 transition-colors group"
                         >
-                            <div className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6 ${feature.color} group-hover:scale-110 transition-transform duration-500`}>
-                                <feature.icon size={32} />
-                            </div>
-                            <h3 className="text-2xl font-bold mb-4 group-hover:text-red-500 transition-colors">{feature.title}</h3>
-                            <p className="text-gray-400 leading-relaxed">
-                                {feature.description}
-                            </p>
+                            <SpotlightCard className="text-center hover:border-red-600 transition-colors group h-full">
+                                <div className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6 ${feature.color} group-hover:scale-110 transition-transform duration-500`}>
+                                    <feature.icon size={32} />
+                                </div>
+                                <h3 className="text-2xl font-bold mb-4 group-hover:text-red-500 transition-colors">{feature.title}</h3>
+                                <p className="text-gray-400 leading-relaxed">
+                                    {feature.description}
+                                </p>
+                            </SpotlightCard>
                         </motion.div>
                     ))}
                 </div>

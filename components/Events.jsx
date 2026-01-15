@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { MapPin, Calendar, Trophy, Medal } from "lucide-react";
+import SpotlightCard from "./SpotlightCard";
 
 // Data extracted from user uploaded image
 const eventsData = [
@@ -57,7 +58,7 @@ const eventsData = [
 
 export const Events = () => {
     return (
-        <section id="events" className="relative py-24 bg-zinc-950 text-white">
+        <section id="events" className="relative py-24 text-white">
             {/* Background decoration */}
             <div className="absolute inset-0 z-0">
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-red-900/10 to-transparent" />
@@ -85,45 +86,46 @@ export const Events = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
-                            className="group relative bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 hover:border-red-600/50 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/20"
                         >
-                            {/* Image */}
-                            <div className="h-48 overflow-hidden relative">
-                                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10" />
-                                <img
-                                    src={event.image}
-                                    alt={event.title}
-                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                                />
-                                {/* Tag */}
-                                <div className="absolute top-4 right-4 z-20">
-                                    {event.category === "Win" ? (
-                                        <span className="bg-yellow-500/90 text-black text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 backdrop-blur-sm">
-                                            <Trophy size={12} /> WIN
-                                        </span>
-                                    ) : (
-                                        <span className="bg-blue-500/90 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 backdrop-blur-sm">
-                                            <Medal size={12} /> PARTICIPATION
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Content */}
-                            <div className="p-6">
-                                <div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
-                                    <span className="flex items-center gap-1 text-red-500">
-                                        <Calendar size={14} /> {event.date}
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                        <MapPin size={14} /> {event.location}
-                                    </span>
+                            <SpotlightCard className="p-0 rounded-2xl border-zinc-800 hover:border-red-600/50 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/20 group h-full">
+                                {/* Image */}
+                                <div className="h-48 overflow-hidden relative">
+                                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10" />
+                                    <img
+                                        src={event.image}
+                                        alt={event.title}
+                                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                                    />
+                                    {/* Tag */}
+                                    <div className="absolute top-4 right-4 z-20">
+                                        {event.category === "Win" ? (
+                                            <span className="bg-yellow-500/90 text-black text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 backdrop-blur-sm">
+                                                <Trophy size={12} /> WIN
+                                            </span>
+                                        ) : (
+                                            <span className="bg-blue-500/90 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 backdrop-blur-sm">
+                                                <Medal size={12} /> PARTICIPATION
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
 
-                                <h3 className="text-xl font-bold mb-2 group-hover:text-red-500 transition-colors leading-tight">
-                                    {event.title}
-                                </h3>
-                            </div>
+                                {/* Content */}
+                                <div className="p-6">
+                                    <div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
+                                        <span className="flex items-center gap-1 text-red-500">
+                                            <Calendar size={14} /> {event.date}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                            <MapPin size={14} /> {event.location}
+                                        </span>
+                                    </div>
+
+                                    <h3 className="text-xl font-bold mb-2 group-hover:text-red-500 transition-colors leading-tight">
+                                        {event.title}
+                                    </h3>
+                                </div>
+                            </SpotlightCard>
                         </motion.div>
                     ))}
                 </div>

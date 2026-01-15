@@ -11,7 +11,7 @@ const affiliations = [
 
 export const Affiliations = () => {
     return (
-        <section className="py-24 bg-zinc-950 relative overflow-hidden">
+        <section className="py-24 relative overflow-hidden">
             {/* Background Decoration */}
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent opacity-50" />
 
