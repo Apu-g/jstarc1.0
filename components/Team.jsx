@@ -42,7 +42,7 @@ const memberData = [
 // Added randomness to visual parameters for organic feel
 // --- Custom Hook for 3D Orbit Physics ---
 // 3 Atomic Paths (0, 60, 120 degrees)
-const useOrbit = (idx: number, total: number, radiusX: number, radiusY: number, speed: number, phaseOffset: number, isMobile: boolean, rotationOffset: number, orbitAngle: number) => {
+const useOrbit = (idx, total, radiusX, radiusY, speed, phaseOffset, isMobile, rotationOffset, orbitAngle) => {
     // Current position on the elliptical path
     const currentTheta = (idx / total) * Math.PI * 2 + phaseOffset + rotationOffset;
 
@@ -87,10 +87,10 @@ const CinematicSpiral = () => {
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    const [orbiters, setOrbiters] = useState<any[]>([]);
+    const [orbiters, setOrbiters] = useState([]);
     const [rotation, setRotation] = useState(0);
-    const interactionRef = useRef<HTMLDivElement>(null);
-    const touchStartRef = useRef<number | null>(null);
+    const interactionRef = useRef(null);
+    const touchStartRef = useRef(null);
 
     useEffect(() => {
         // Flatten the data into a single array loop
@@ -127,7 +127,7 @@ const CinematicSpiral = () => {
         const element = interactionRef.current;
         if (!element) return;
 
-        const handleWheel = (e: WheelEvent) => {
+        const handleWheel = (e) => {
             e.preventDefault();
             setRotation(prev => prev + e.deltaY * 0.002);
         };
@@ -138,11 +138,11 @@ const CinematicSpiral = () => {
     }, []);
 
     // Handle Touch Rotation
-    const handleTouchStart = (e: React.TouchEvent) => {
+    const handleTouchStart = (e) => {
         touchStartRef.current = e.touches[0].clientY;
     };
 
-    const handleTouchMove = (e: React.TouchEvent) => {
+    const handleTouchMove = (e) => {
         if (touchStartRef.current === null) return;
         const currentY = e.touches[0].clientY;
         const delta = touchStartRef.current - currentY;
@@ -201,7 +201,7 @@ const CinematicSpiral = () => {
 
                 {/* Orbiting Vortex System */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-                    {orbiters.map((orbiter: any, i) => (
+                    {orbiters.map((orbiter, i) => (
                         <Orbiter key={i} index={i} total={orbiters.length} config={orbiter} isMobile={isMobile} rotation={rotation} />
                     ))}
 
@@ -215,7 +215,7 @@ const CinematicSpiral = () => {
     );
 };
 
-const Orbiter = ({ index, total, config, isMobile, rotation }: { index: number, total: number, config: any, isMobile: boolean, rotation: number }) => {
+const Orbiter = ({ index, total, config, isMobile, rotation }) => {
     const { x, y, scale, opacity, zIndex } = useOrbit(
         index,
         total,
@@ -251,7 +251,7 @@ const Orbiter = ({ index, total, config, isMobile, rotation }: { index: number, 
 };
 
 // Helper to draw the faint orbit lines
-const OrbitTrack = ({ angle, isMobile }: { angle: number, isMobile: boolean }) => {
+const OrbitTrack = ({ angle, isMobile }) => {
     const radiusX = isMobile ? 300 * 0.6 : 300;
     const radiusY = isMobile ? 80 * 0.6 : 80;
 
@@ -270,7 +270,7 @@ const OrbitTrack = ({ angle, isMobile }: { angle: number, isMobile: boolean }) =
 };
 
 // --- Updated Zigzag Line (Tighter Physics) ---
-const ZigzagLine = ({ containerRef }: { containerRef: any }) => {
+const ZigzagLine = ({ containerRef }) => {
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start center", "end center"]
@@ -339,7 +339,7 @@ const ZigzagLine = ({ containerRef }: { containerRef: any }) => {
     );
 };
 
-const StudentCard = ({ member, index }: { member: any, index: number }) => {
+const StudentCard = ({ member, index }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { margin: "-45% 0px -45% 0px", once: false });
     const isEven = index % 2 === 0;

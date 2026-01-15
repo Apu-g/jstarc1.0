@@ -8,7 +8,7 @@ import * as THREE from "three";
 // --- Text Animation Variants ---
 const containerVariants = {
     hidden: { opacity: 0 },
-    visible: (customDelay: number = 0) => ({
+    visible: (customDelay = 0) => ({
         opacity: 1,
         transition: {
             staggerChildren: 0.1,
@@ -25,7 +25,7 @@ const letterVariants = {
         filter: "blur(0px)",
         transition: {
             duration: 1.0,
-            ease: "easeOut" as const,
+            ease: "easeOut",
         },
     },
 };
@@ -33,7 +33,7 @@ const letterVariants = {
 // --- Particle System (Three.js) ---
 const Particles = () => {
     const count = 400;
-    const mesh = useRef<any>(null);
+    const mesh = useRef(null);
 
     // Generate Soft blurred circle texture programmatically
     const particleTexture = useMemo(() => {
@@ -99,7 +99,7 @@ const Particles = () => {
 };
 
 // Component to render text with stagger
-const CinematicText = ({ text, className, delay = 0 }: { text: string, className?: string, delay?: number }) => {
+const CinematicText = ({ text, className, delay = 0 }) => {
     return (
         <motion.div
             className={`flex flex-wrap justify-center overflow-hidden ${className}`}
