@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
-// Using placeholders for now, but configured for the circular look
-const teamImages = [
+// Team images for orbiting
+const orbitImages = [
     "/assets/jstarc_team/007ed55b-c516-468b-b3d6-9a1c62f5a38d.jpg",
     "/assets/jstarc_team/0e07f5c2-9b97-415a-b0b3-c148dceef470.jpg",
     "/assets/jstarc_team/1578fc6b-e846-4bd8-a5a1-2a6724080abc.jpg",
@@ -13,62 +13,138 @@ const teamImages = [
     "/assets/jstarc_team/3a9679b5-216d-4d52-8e8b-e047de2f69e8.jpg",
     "/assets/jstarc_team/3f17e987-ff28-4cfd-af9c-01d0971af864.jpg",
     "/assets/jstarc_team/423f9d2f-8bb3-4dd5-9f12-2c3e38e6dcf0.jpg",
-    "/assets/jstarc_team/4c1e8288-d28a-4995-803b-2ad1c756d8f2.jpg",
-    "/assets/jstarc_team/673326a9-2535-46be-ad18-ba5dbada0deb.jpg",
-    "/assets/jstarc_team/6d8ead85-30b3-4aec-aa81-599b07296044.jpg",
-    "/assets/jstarc_team/6dd5463e-b9cd-4f06-847d-f5a8cae41b3c.jpg",
-    "/assets/jstarc_team/776c05b2-5542-4c77-b09c-70bf0d82a0ce.jpg",
-    "/assets/jstarc_team/7ef25940-bbd6-43e8-af96-8d0249a502e0.jpg",
-    "/assets/jstarc_team/87cd94ec-efac-415e-a146-26a77fa27b2f.jpg",
-    "/assets/jstarc_team/8cead97b-d9b7-4774-9805-9c877f79a5c9.jpg",
 ];
 
-export const DemoTeam = () => {
-    // Duplicate the array to create a seamless loop
-    const duplicatedImages = [...teamImages, ...teamImages];
+// Center image - the girl doing the kick
+const centerImage = "/assets/central-master-kick.png";
+
+// Single orbiting satellite component with 3D depth effect
+const OrbitingSatellite = ({ image, index, total, angle, radius }) => {
+    // Calculate position based on current angle
+    const itemAngle = angle + (index / total) * Math.PI * 2;
+
+    // X position on the ellipse
+    const x = Math.cos(itemAngle) * radius;
+
+    // Y position - compressed for 3D perspective effect
+    const y = Math.sin(itemAngle) * (radius * 0.35);
+
+    // Z-depth simulation: items at top of orbit (sin > 0) are "behind", bottom are "in front"
+    const depth = Math.sin(itemAngle);
+
+    // Scale based on depth - larger when in front (bottom), smaller when behind (top)
+    const scale = 0.6 + (depth + 1) * 0.3; // Range: 0.6 to 1.2
+
+    // Opacity based on depth - more visible in front, fade when behind
+    const opacity = 0.3 + (depth + 1) * 0.35; // Range: 0.3 to 1.0
+
+    // Z-index: items in front should be on top
+    const zIndex = Math.round((depth + 1) * 10) + 10;
 
     return (
-        <section className="py-24 overflow-hidden relative">
-            <div className="container mx-auto px-6 mb-12 text-center">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false }}
-                >
-                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Our Award-Winning Demo Team</h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
-                        Witness the skill, precision, and power of our nationally recognized demonstration team.
-                    </p>
-                </motion.div>
-            </div>
+        <motion.div
+            className="absolute rounded-full overflow-hidden border-2 border-white/20 bg-black"
+            style={{
+                width: 70,
+                height: 70,
+                left: "50%",
+                top: "50%",
+                x: x - 35,
+                y: y - 35,
+                scale,
+                opacity,
+                zIndex,
+            }}
+        >
+            <img
+                src={image}
+                alt={`Team member ${index + 1}`}
+                className="w-full h-full object-cover"
+            />
+        </motion.div>
+    );
+};
 
-            {/* Marquee Container */}
-            <div className="relative w-full flex overflow-hidden mask-gradient-to-r from-transparent via-black to-transparent">
-                <motion.div
-                    className="flex gap-8 items-center"
-                    animate={{ x: ["0%", "-50%"] }}
-                    transition={{
-                        repeat: Infinity,
-                        duration: 30,
-                        ease: "linear"
-                    }}
-                    style={{ width: "max-content" }}
-                >
-                    {duplicatedImages.map((src, index) => (
-                        <div
-                            key={index}
-                            className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-zinc-800 flex-shrink-0 transition-all duration-300 hover:scale-110 hover:border-red-600 z-10"
+export const DemoTeam = () => {
+    const [angle, setAngle] = useState(0);
+
+    // Continuous rotation animation
+    useEffect(() => {
+        const duration = 20000; // 20 seconds for full rotation
+        let startTime = Date.now();
+        let animationFrame;
+
+        const animateOrbit = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = (elapsed % duration) / duration;
+            setAngle(progress * Math.PI * 2);
+            animationFrame = requestAnimationFrame(animateOrbit);
+        };
+
+        animationFrame = requestAnimationFrame(animateOrbit);
+
+        return () => cancelAnimationFrame(animationFrame);
+    }, []);
+
+    return (
+        <section className="py-24 relative overflow-hidden">
+            <div className="container mx-auto px-6 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+                    {/* Left Content - Text */}
+                    <motion.div
+                        initial={{ opacity: 0, x: -50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-white leading-[0.9] mb-6">
+                            JSTARC <br />
+                            <span className="text-primary">BENGALURU</span> <br />
+                            DEMONSTRATION <br />
+                            TEAM
+                        </h2>
+                        <p className="text-xl text-muted max-w-lg mb-8 border-l-4 border-primary pl-6">
+                            Mastery, Discipline, and the Future of Martial Arts.
+                        </p>
+                    </motion.div>
+
+                    {/* Right Content - Electron Orbit Animation */}
+                    <div className="relative flex items-center justify-center min-h-[500px]">
+
+                        {/* Center Image - The Girl */}
+                        <motion.div
+                            initial={{ scale: 0, opacity: 0 }}
+                            whileInView={{ scale: 1, opacity: 1 }}
+                            transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
+                            className="relative z-30 w-52 h-52 md:w-72 md:h-72 rounded-full border-4 border-white/20 shadow-2xl overflow-hidden"
+                            style={{
+                                boxShadow: "0 0 60px rgba(255,255,255,0.15), 0 0 100px rgba(239,68,68,0.1)"
+                            }}
                         >
                             <img
-                                src={src}
-                                alt={`Demo Team member ${index}`}
+                                src={centerImage}
+                                alt="Demo Team Center"
                                 className="w-full h-full object-cover"
                             />
-                        </div>
-                    ))}
-                </motion.div>
-            </div>
+                        </motion.div>
 
+                        {/* Orbiting Satellites */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            {orbitImages.map((img, index) => (
+                                <OrbitingSatellite
+                                    key={index}
+                                    image={img}
+                                    index={index}
+                                    total={orbitImages.length}
+                                    angle={angle}
+                                    radius={200}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     );
-}
+};

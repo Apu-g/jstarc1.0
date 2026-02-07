@@ -1,11 +1,7 @@
 "use client";
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Autoplay } from 'swiper/modules';
 import { motion } from "framer-motion";
-import 'swiper/css';
-import 'swiper/css/navigation';
-import SpotlightCard from './SpotlightCard';
+import LogoLoop from './LogoLoop';
 
 const brands = [
     "/assets/logos/powerbrand1.jpg",
@@ -16,6 +12,14 @@ const brands = [
 ];
 
 export const PowerBrands = () => {
+    // Format logos for LogoLoop
+    const logoItems = brands.map((src, index) => ({
+        src,
+        alt: `Powerbrand ${index + 1}`,
+        // Add styling for internal logo rendering if needed, 
+        // but LogoLoop handles images directly via 'src' prop in items
+    }));
+
     return (
         <section className="py-24 relative border-b border-white/5">
             <div className="container mx-auto px-6">
@@ -25,39 +29,22 @@ export const PowerBrands = () => {
                     viewport={{ once: false }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-4xl font-bold text-white mb-4">Powerbrands</h2>
-                    <div className="w-24 h-1 bg-red-600 mx-auto rounded-full" />
+                    <h2 className="text-4xl font-bold text-white mb-4 text-glow">Powerbrands</h2>
+                    <div className="w-24 h-1 bg-gradient-to-r from-neon-blue to-neon-purple mx-auto rounded-full shadow-[0_0_10px_rgba(0,243,255,0.5)]" />
                 </motion.div>
 
-                <Swiper
-                    modules={[Navigation, Autoplay]}
-                    spaceBetween={30}
-                    slidesPerView={1}
-                    breakpoints={{
-                        640: { slidesPerView: 2 },
-                        1024: { slidesPerView: 3 },
-                    }}
-                    navigation
-                    autoplay={{ delay: 2500, disableOnInteraction: false }}
-                    loop={true}
-                    className="w-full max-w-6xl mx-auto px-12"
-                >
-                    {brands.map((src, index) => (
-                        <SwiperSlide key={index} className="py-8">
-                            <SpotlightCard className="group relative h-64 flex items-center justify-center p-8 bg-white/5 backdrop-blur-sm border-white/10 rounded-3xl hover:bg-white/10 transition-all duration-300 mx-4 shadow-lg hover:shadow-red-900/20">
-
-                                {/* Inner pure white container for logo clarity */}
-                                <div className="w-48 h-48 bg-white rounded-2xl flex items-center justify-center p-6 shadow-2xl relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
-                                    <img
-                                        src={src}
-                                        alt={`Powerbrand ${index + 1}`}
-                                        className="max-w-full max-h-full object-contain mix-blend-multiply"
-                                    />
-                                </div>
-                            </SpotlightCard>
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
+                <div className="max-w-4xl mx-auto glass-card rounded-2xl p-8 hover:shadow-[0_0_30px_rgba(0,243,255,0.15)] transition-shadow duration-300">
+                    <LogoLoop
+                        logos={logoItems}
+                        speed={100}
+                        direction="left"
+                        logoHeight={80} // Increased height for better visibility
+                        gap={60}
+                        pauseOnHover={true}
+                        width="100%" // Container controls width
+                        className="opacity-90 hover:opacity-100 transition-all duration-500"
+                    />
+                </div>
             </div>
         </section>
     );

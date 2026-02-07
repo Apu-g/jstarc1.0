@@ -60,9 +60,9 @@ export const Events = () => {
     return (
         <section id="events" className="relative py-24 text-white">
             {/* Background decoration */}
-            <div className="absolute inset-0 z-0">
-                <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-red-900/10 to-transparent" />
-                <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-gradient-to-tr from-blue-900/10 to-transparent" />
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/10 to-transparent opacity-50" />
+                <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-gradient-to-tr from-accent/10 to-transparent opacity-50" />
             </div>
 
             <div className="container mx-auto px-6 relative z-10">
@@ -72,8 +72,8 @@ export const Events = () => {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-4xl font-bold mb-4 tracking-tight">Track Record & Events</h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
+                    <h2 className="text-4xl font-bold mb-4 tracking-tight text-white">Track Record & Events</h2>
+                    <p className="text-muted max-w-2xl mx-auto">
                         From local demonstrations to international victories, our students constantly push their limits.
                     </p>
                 </motion.div>
@@ -87,10 +87,10 @@ export const Events = () => {
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
                         >
-                            <SpotlightCard className="p-0 rounded-2xl border-zinc-800 hover:border-red-600/50 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/20 group h-full">
+                            <SpotlightCard className="p-0 rounded-2xl border-white/10 bg-transparent hover:border-primary/50 transition-all duration-300 hover:shadow-glow group h-full">
                                 {/* Image */}
                                 <div className="h-48 overflow-hidden relative">
-                                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10" />
+                                    <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors z-10" />
                                     <img
                                         src={event.image}
                                         alt={event.title}
@@ -99,11 +99,11 @@ export const Events = () => {
                                     {/* Tag */}
                                     <div className="absolute top-4 right-4 z-20">
                                         {event.category === "Win" ? (
-                                            <span className="bg-yellow-500/90 text-black text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 backdrop-blur-sm">
+                                            <span className="bg-yellow-500/80 backdrop-blur-sm text-black text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
                                                 <Trophy size={12} /> WIN
                                             </span>
                                         ) : (
-                                            <span className="bg-blue-500/90 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 backdrop-blur-sm">
+                                            <span className="bg-blue-500/80 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
                                                 <Medal size={12} /> PARTICIPATION
                                             </span>
                                         )}
@@ -112,8 +112,8 @@ export const Events = () => {
 
                                 {/* Content */}
                                 <div className="p-6">
-                                    <div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
-                                        <span className="flex items-center gap-1 text-red-500">
+                                    <div className="flex items-center gap-4 text-xs text-muted mb-3">
+                                        <span className="flex items-center gap-1 text-primary">
                                             <Calendar size={14} /> {event.date}
                                         </span>
                                         <span className="flex items-center gap-1">
@@ -121,7 +121,7 @@ export const Events = () => {
                                         </span>
                                     </div>
 
-                                    <h3 className="text-xl font-bold mb-2 group-hover:text-red-500 transition-colors leading-tight">
+                                    <h3 className="text-xl font-bold mb-2 text-white group-hover:text-primary transition-colors leading-tight">
                                         {event.title}
                                     </h3>
                                 </div>
@@ -131,7 +131,7 @@ export const Events = () => {
                 </div>
 
                 <div className="mt-16 text-center">
-                    <button className="border border-zinc-700 text-white px-8 py-3 rounded-full hover:bg-white hover:text-black transition-all text-sm tracking-widest uppercase">
+                    <button className="border border-white/20 text-white px-8 py-3 rounded-full hover:bg-white hover:text-black transition-all text-sm tracking-widest uppercase font-medium">
                         View All Archives
                     </button>
                 </div>

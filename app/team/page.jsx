@@ -6,7 +6,7 @@ export default function TeamPage() {
     return (
         <main className="min-h-screen text-white selection:bg-red-600 selection:text-white">
             <Navbar />
-            <div className="pt-20">
+            <div className="pt-32">
                 <Team />
             </div>
             <Contact />

@@ -1,22 +1,22 @@
 "use client";
 
 import { motion } from "framer-motion";
-import SpotlightCard from "./SpotlightCard";
+import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 
 const masters = [
-    {
-        id: 1,
-        name: "Master Jai kumar Kannan",
-        role: "6th Dan Black Belt",
-        desc: "Head instructor with over 20+ years of experience.",
-        img: "/assets/masters/jaimaster.jpg"
-    },
     {
         id: 2,
         name: "Master Nilesh Jalnawala",
         role: "8th Dan Black Belt",
         desc: "competitive poomsae.",
         img: "/assets/masters/nilesh master.jpg"
+    },
+    {
+        id: 1,
+        name: "Master Jai kumar Kannan",
+        role: "6th Dan Black Belt",
+        desc: "Head instructor with over 20+ years of experience.",
+        img: "/assets/masters/jaimaster.jpg"
     },
 ];
 
@@ -32,38 +32,47 @@ export const HomeMasters = () => {
                     className="text-center mb-16"
                 >
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Meet Our Masters</h2>
-                    <div className="w-24 h-1.5 bg-red-600 mx-auto rounded-full" />
+                    <div className="w-24 h-1.5 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
                 </motion.div>
 
-                <div className="flex flex-wrap justify-center gap-12 md:gap-20 max-w-5xl mx-auto">
-                    {masters.map((master, index) => (
-                        <motion.div
-                            key={master.id}
-                            initial={{ opacity: 0, scale: 0.9, y: 50 }}
-                            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                            viewport={{ once: false, amount: 0.3 }}
-                            transition={{ duration: 0.6, delay: index * 0.2 }}
-                            className="flex-1 min-w-[300px]"
-                        >
-                            <SpotlightCard className="h-full flex flex-col items-center text-center">
-                                <div className="relative mb-8 group">
-                                    {/* Glow Effect */}
-                                    <div className="absolute inset-0 rounded-full bg-red-600/20 blur-2xl transform group-hover:scale-110 transition-transform duration-500 opacity-0 group-hover:opacity-100" />
-
-                                    <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-zinc-900 shadow-2xl relative z-10 transition-transform duration-500 group-hover:-translate-y-2">
+                <div className="flex flex-wrap justify-center gap-12 md:gap-20">
+                    {masters.map((master) => (
+                        <CardContainer key={master.id} className="inter-var">
+                            <CardBody className="glass relative group/card border-transparent w-auto sm:w-[24rem] h-auto rounded-xl p-8 hover:shadow-glow transition-all duration-300">
+                                <CardItem
+                                    translateZ="50"
+                                    className="w-full flex justify-center mt-4"
+                                >
+                                    <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-white/10 shadow-lg">
                                         <img
                                             src={master.img}
                                             alt={master.name}
-                                            className="w-full h-full object-cover object-top"
+                                            className="h-full w-full object-cover object-top"
                                         />
                                     </div>
-                                </div>
-
-                                <h3 className="text-xl md:text-2xl font-bold text-white mb-2">{master.name}</h3>
-                                <p className="text-red-500 font-bold mb-3">{master.role}</p>
-                                <p className="text-gray-400 max-w-xs mx-auto leading-relaxed">{master.desc}</p>
-                            </SpotlightCard>
-                        </motion.div>
+                                </CardItem>
+                                <CardItem
+                                    translateZ="60"
+                                    className="text-2xl font-bold text-white text-center w-full mt-6"
+                                >
+                                    {master.name}
+                                </CardItem>
+                                <CardItem
+                                    as="p"
+                                    translateZ="70"
+                                    className="text-primary font-bold text-center w-full mt-2 text-sm uppercase tracking-wider"
+                                >
+                                    {master.role}
+                                </CardItem>
+                                <CardItem
+                                    as="p"
+                                    translateZ="50"
+                                    className="text-muted text-sm max-w-sm mt-4 text-center w-full leading-relaxed"
+                                >
+                                    {master.desc}
+                                </CardItem>
+                            </CardBody>
+                        </CardContainer>
                     ))}
                 </div>
             </div>
