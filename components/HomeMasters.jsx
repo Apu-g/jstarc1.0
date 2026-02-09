@@ -22,14 +22,14 @@ const masters = [
 
 export const HomeMasters = () => {
     return (
-        <section className="py-24 overflow-hidden relative">
+        <section className="py-12 overflow-hidden relative">
             <div className="container mx-auto px-6 relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false, amount: 0.3 }}
                     transition={{ duration: 0.6 }}
-                    className="text-center mb-16"
+                    className="text-center mb-8"
                 >
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Meet Our Masters</h2>
                     <div className="w-24 h-1.5 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />

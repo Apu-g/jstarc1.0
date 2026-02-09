@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import ScrambledText from "@/components/ui/scrambled-text";
 
 // Team images for orbiting
 const orbitImages = [
@@ -99,10 +100,10 @@ export const DemoTeam = () => {
                         transition={{ duration: 0.8 }}
                     >
                         <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-white leading-[0.9] mb-6">
-                            JSTARC <br />
-                            <span className="text-primary">BENGALURU</span> <br />
-                            DEMONSTRATION <br />
-                            TEAM
+                            <ScrambledText text="JSTARC" as="span" className="block" />
+                            <ScrambledText text="BENGALURU" as="span" className="block text-transparent bg-clip-text bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink" />
+                            <ScrambledText text="DEMONSTRATION" as="span" className="block" />
+                            <ScrambledText text="TEAM" as="span" className="block" />
                         </h2>
                         <p className="text-xl text-muted max-w-lg mb-8 border-l-4 border-primary pl-6">
                             Mastery, Discipline, and the Future of Martial Arts.

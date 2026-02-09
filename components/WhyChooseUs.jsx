@@ -28,13 +28,13 @@ const features = [
 
 export const WhyChooseUs = () => {
     return (
-        <section className="py-24 relative overflow-hidden">
+        <section className="py-12 relative overflow-hidden">
             <div className="container mx-auto px-6 relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false }}
-                    className="text-center mb-20"
+                    className="text-center mb-12"
                 >
                     <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white text-glow">Why Train with JStarc?</h2>
                     <div className="w-32 h-1 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-green mx-auto rounded-full shadow-[0_0_10px_rgba(0,243,255,0.5)]" />

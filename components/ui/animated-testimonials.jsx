@@ -3,12 +3,14 @@ import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
+import FocusModeOverlay from "@/components/FocusModeOverlay";
 
 export const AnimatedTestimonials = ({
     testimonials,
     autoplay = false
 }) => {
     const [active, setActive] = useState(0);
+    const [focusedMember, setFocusedMember] = useState(null);
 
     const handleNext = useCallback(() => {
         setActive((prev) => (prev + 1) % testimonials.length);
@@ -34,8 +36,18 @@ export const AnimatedTestimonials = ({
     };
 
     return (
-        <div
-            className="mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12 glass rounded-2xl shadow-glow">
+        <>
+            <AnimatePresence>
+                {focusedMember && (
+                    <FocusModeOverlay 
+                        member={focusedMember} 
+                        index={testimonials.findIndex(m => m.id === focusedMember.id)}
+                        onClose={() => setFocusedMember(null)} 
+                    />
+                )}
+            </AnimatePresence>
+            <div
+                className="mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12 glass rounded-2xl shadow-glow">
             <div className="relative grid grid-cols-1 gap-20 md:grid-cols-2">
                 <div>
                     <div className="relative h-80 w-full">
@@ -69,14 +81,18 @@ export const AnimatedTestimonials = ({
                                         duration: 0.4,
                                         ease: "easeInOut",
                                     }}
-                                    className="absolute inset-0 origin-bottom">
-                                    <Image
-                                        src={testimonial.src}
-                                        alt={testimonial.name}
-                                        width={500}
-                                        height={500}
-                                        draggable={false}
-                                        className="h-full w-full rounded-3xl object-cover object-center border border-white/10" />
+                                    onClick={() => isActive(index) && setFocusedMember(testimonial)}
+                                    className={`absolute inset-0 origin-bottom ${isActive(index) ? "cursor-pointer" : ""}`}>
+                                    <motion.div layoutId={`image-${testimonial.id}`} className="h-full w-full">
+                                        <Image
+                                            src={testimonial.src}
+                                            alt={testimonial.name}
+                                            width={500}
+                                            height={500}
+                                            draggable={false}
+                                            style={{ objectPosition: testimonial.facePos || "center" }}
+                                            className="h-full w-full rounded-3xl object-cover border border-white/10" />
+                                    </motion.div>
                                 </motion.div>
                             ))}
                         </AnimatePresence>
@@ -148,6 +164,7 @@ export const AnimatedTestimonials = ({
                     </div>
                 </div>
             </div>
-        </div>
+            </div>
+        </>
     );
 };

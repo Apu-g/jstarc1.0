@@ -11,7 +11,7 @@ const affiliations = [
 
 export const Affiliations = () => {
     return (
-        <section className="py-24 relative overflow-hidden">
+        <section className="py-12 relative overflow-hidden">
             {/* Background Decoration */}
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-50" />
 
@@ -20,7 +20,7 @@ export const Affiliations = () => {
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false }}
-                    className="text-center mb-16"
+                    className="text-center mb-8"
                 >
                     <h2 className="text-4xl font-bold text-white mb-4">Affiliated To</h2>
                     <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />

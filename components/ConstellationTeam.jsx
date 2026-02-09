@@ -3,7 +3,8 @@
 import React, { useRef, useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { X, Award, Instagram, Youtube } from "lucide-react";
+import FocusModeOverlay from "@/components/FocusModeOverlay";
+import { SparklesText } from "@/components/ui/sparkles-text";
 
 const beltColors = {
     "White": "#e5e7eb",
@@ -11,8 +12,8 @@ const beltColors = {
     "Green": "#22c55e",
     "Blue": "#3b82f6",
     "Red": "#ef4444",
-    "Black": "#7c3aed",
-    "Black Belt": "#7c3aed",
+    "Black": "#E9F3FF",
+    "Black Belt": "#E9F3FF",
     "Red Belt": "#ef4444"
 };
 
@@ -23,23 +24,6 @@ const getBeltColor = (rank) => {
     }
     return beltColors["Black"];
 };
-
-// Dummy data generator for empty fields
-const enrichMemberData = (member) => ({
-    ...member,
-    bio: member.bio || `A dedicated martial artist with a passion for excellence. ${member.name} has shown remarkable growth and technical proficiency in their journey to ${member.rank}.`,
-    achievements: member.achievements || ["State Championship Gold 2024", "National Qualifier", "Best Technical Player"],
-    certificates: ["Kukkiwon 1st Dan", "State Referee Class C"],
-    gallery: [
-        member.img,
-        "/assets/jstarc_team/007ed55b-c516-468b-b3d6-9a1c62f5a38d.jpg",
-        "/assets/jstarc_team/0e07f5c2-9b97-415a-b0b3-c148dceef470.jpg"
-    ],
-    socials: {
-        insta: "#",
-        yt: "#"
-    }
-});
 
 const ParticleDust = () => {
     const [particles, setParticles] = useState([]);
@@ -89,12 +73,36 @@ const ParticleDust = () => {
 const ConstellationNode = ({ member, xPos, yPos, isActive, onFocus }) => {
     const color = getBeltColor(member.rank);
     const [isHovered, setIsHovered] = useState(false);
+    const [isSparkling, setIsSparkling] = useState(false);
     
     // Active state is either scrolled-to (isActive) or hovered
     const isActiveState = isActive || isHovered;
     
     // Determine info panel position: if node is on right (xPos > 0), show panel on left. And vice versa.
     const isRightSide = xPos > 0;
+
+    useEffect(() => {
+        if (isActive) {
+            const startTimer = setTimeout(() => setIsSparkling(true), 0);
+            const endTimer = setTimeout(() => setIsSparkling(false), 1500);
+            return () => {
+                clearTimeout(startTimer);
+                clearTimeout(endTimer);
+            };
+        }
+    }, [isActive]);
+
+    const handleClick = () => {
+        setIsSparkling(true);
+        setTimeout(() => setIsSparkling(false), 1500);
+        onFocus(member);
+    };
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+        setIsSparkling(true);
+        setTimeout(() => setIsSparkling(false), 1500);
+    };
 
     return (
         <motion.div
@@ -112,13 +120,13 @@ const ConstellationNode = ({ member, xPos, yPos, isActive, onFocus }) => {
                 style={{ 
                     transform: `translateX(${xPos}px)`,
                 }}
-                onMouseEnter={() => setIsHovered(true)}
+                onMouseEnter={handleMouseEnter}
                 onMouseLeave={() => setIsHovered(false)}
             >
                 {/* Node Container */}
                 <motion.div
                     className="relative group cursor-pointer will-change-transform"
-                    onClick={() => onFocus(member)}
+                    onClick={handleClick}
                     animate={{ 
                         scale: isActiveState ? 1.2 : 1,
                     }}
@@ -129,18 +137,25 @@ const ConstellationNode = ({ member, xPos, yPos, isActive, onFocus }) => {
                     {isActiveState && (
                         <motion.div 
                             className="absolute -inset-8 rounded-full blur-xl opacity-40 pointer-events-none"
-                            style={{ backgroundColor: color }}
+                            style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}
                             animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.2, 1] }}
                             transition={{ duration: 2, repeat: Infinity }}
                         />
+                    )}
+
+                    {/* Sparkles Effect */}
+                    {isSparkling && (
+                        <div className="absolute inset-[-40%] z-50 pointer-events-none">
+                            <SparklesText sparklesCount={8} colors={{ first: "#E9F3FF", second: "#B4D2FF" }} className="w-full h-full" />
+                        </div>
                     )}
 
                     {/* Node Image Circle */}
                     <div 
                         className="relative w-24 h-24 md:w-32 md:h-32 rounded-full p-[2px] transition-all duration-300 bg-black overflow-hidden"
                         style={{ 
-                            boxShadow: isActiveState ? `0 0 30px ${color}60` : '0 0 15px rgba(255,255,255,0.1)',
-                            border: `2px solid ${isActiveState ? color : 'rgba(255,255,255,0.2)'}`
+                            boxShadow: isActiveState ? `0 0 20px rgba(233,243,255,0.7), 0 0 40px rgba(180,210,255,0.35)` : '0 0 15px rgba(233,243,255,0.1)',
+                            border: `4px solid ${isActiveState ? '#E9F3FF' : 'rgba(233,243,255,0.2)'}`
                         }}
                     >
                         <motion.img 
@@ -155,8 +170,6 @@ const ConstellationNode = ({ member, xPos, yPos, isActive, onFocus }) => {
                             transition={{ duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
                         />
                     </div>
-
-                    {/* Connector Dot removed */}
                 </motion.div>
 
                 {/* Occurrence Indicator / Info Panel */}
@@ -167,7 +180,7 @@ const ConstellationNode = ({ member, xPos, yPos, isActive, onFocus }) => {
                             animate={{ opacity: 1, x: 0, scale: 1 }}
                             exit={{ opacity: 0, x: isRightSide ? 20 : -20, scale: 0.9 }}
                             transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                            onClick={() => onFocus(member)}
+                            onClick={handleClick}
                             className={cn(
                                 "absolute top-1/2 -translate-y-1/2 w-64 pointer-events-none md:pointer-events-auto hidden md:block cursor-pointer transition-colors",
                                 isRightSide ? "right-full mr-6 text-right" : "left-full ml-6 text-left"
@@ -179,153 +192,6 @@ const ConstellationNode = ({ member, xPos, yPos, isActive, onFocus }) => {
                         </motion.div>
                     )}
                 </AnimatePresence>
-            </div>
-        </motion.div>
-    );
-};
-
-// Full-Screen Morphing Overlay
-const FocusModeOverlay = ({ member, index, onClose }) => {
-    // Lock body scroll
-    useEffect(() => {
-        document.body.style.overflow = "hidden";
-        return () => { document.body.style.overflow = "auto"; };
-    }, []);
-
-    if (!member) return null;
-    
-    const color = getBeltColor(member.rank);
-    const enrichedMember = enrichMemberData(member);
-    const isEven = index % 2 === 0;
-
-    return (
-        <motion.div className="fixed inset-0 z-[100] flex items-center justify-center">
-            {/* Backdrop */}
-            <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                className="absolute inset-0 bg-black/90 backdrop-blur-md"
-                onClick={onClose}
-            />
-
-            <div className={`relative w-full h-full flex flex-col md:flex-row ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} pointer-events-none`}>
-                
-                {/* Image Side - Morph Target */}
-                <div 
-                    className="w-full md:w-1/2 h-1/2 md:h-full relative overflow-hidden pointer-events-auto"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <motion.img 
-                        layoutId={`image-${member.id}`}
-                        src={member.img} 
-                        alt={member.name} 
-                        className="w-full h-full object-contain"
-                        style={{ objectPosition: "center" }}
-                        transition={{ duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
-                    />
-                    <motion.div 
-                         initial={{ opacity: 0 }}
-                         animate={{ opacity: 1 }}
-                         exit={{ opacity: 0 }}
-                         transition={{ duration: 0.3 }}
-                         className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent md:bg-gradient-to-r" 
-                    />
-                    
-                    <button 
-                        onClick={onClose}
-                        className="absolute top-6 right-6 z-50 p-2 rounded-full bg-black/50 hover:bg-white/20 text-white transition-colors md:hidden"
-                    >
-                        <X size={24} />
-                    </button>
-                </div>
-
-                {/* Content Side */}
-                <motion.div 
-                    className="w-full md:w-1/2 h-1/2 md:h-full p-8 md:p-16 overflow-y-auto bg-black/40 md:bg-transparent pointer-events-auto"
-                    initial={{ opacity: 0, x: isEven ? 50 : -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: isEven ? 50 : -50 }}
-                    transition={{ delay: 0.1, duration: 0.3 }}
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <button 
-                        onClick={onClose}
-                        className="hidden md:block absolute top-8 right-8 z-50 p-2 rounded-full bg-white/5 hover:bg-white/20 text-white transition-colors"
-                    >
-                        <X size={32} />
-                    </button>
-
-                    <div className="space-y-8 max-w-2xl mx-auto md:mx-0">
-                        <div>
-                            <motion.p 
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                                className="text-sm font-bold tracking-[0.3em] uppercase mb-4" 
-                                style={{ color }}
-                            >
-                                {member.rank}
-                            </motion.p>
-                            <motion.h2 
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3 }}
-                                className="text-5xl md:text-7xl font-black text-white leading-none mb-6"
-                            >
-                                {member.name}
-                            </motion.h2>
-                            <motion.p 
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.4 }}
-                                className="text-slate-300 text-lg leading-relaxed font-light"
-                            >
-                                {enrichedMember.bio}
-                            </motion.p>
-                        </div>
-
-                        <motion.div 
-                            initial={{ scaleX: 0 }}
-                            animate={{ scaleX: 1 }}
-                            transition={{ delay: 0.5, duration: 0.6 }}
-                            className="h-px w-full bg-white/20 origin-left" 
-                        />
-
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.6 }}
-                        >
-                            <h3 className="flex items-center gap-3 text-xl font-bold text-white mb-6">
-                                <Award className="text-yellow-500" /> Achievements
-                            </h3>
-                            <ul className="space-y-4">
-                                {enrichedMember.achievements.map((achievement, i) => (
-                                    <li key={i} className="flex items-start gap-4 text-slate-300 text-lg">
-                                        <div className="mt-2 w-1.5 h-1.5 rounded-full bg-white/50 shrink-0" />
-                                        {achievement}
-                                    </li>
-                                ))}
-                            </ul>
-                        </motion.div>
-
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.7 }}
-                            className="flex gap-6 pt-8"
-                        >
-                            <a href="#" className="p-4 rounded-full bg-white/5 hover:bg-white/10 hover:text-pink-500 transition-all text-white border border-white/10">
-                                <Instagram size={24} />
-                            </a>
-                            <a href="#" className="p-4 rounded-full bg-white/5 hover:bg-white/10 hover:text-red-500 transition-all text-white border border-white/10">
-                                <Youtube size={24} />
-                            </a>
-                        </motion.div>
-                    </div>
-                </motion.div>
             </div>
         </motion.div>
     );
@@ -417,7 +283,7 @@ export const ConstellationTeam = ({ members }) => {
 
     return (
         <section 
-            className="relative w-full bg-[#050507]"
+            className="relative w-full bg-transparent"
             style={{ height: TOTAL_HEIGHT }}
         >
             <AnimatePresence>
@@ -430,11 +296,15 @@ export const ConstellationTeam = ({ members }) => {
                 )}
             </AnimatePresence>
 
-            {/* Background Layers */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#050507] via-[#0a0a0f] to-[#050507]" />
-            <div className="absolute inset-0 opacity-[0.03]" 
+            {/* Background Layers - Seamless Blend */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
                 style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} 
             />
+            
+            {/* Top and Bottom Feathering for extra smoothness */}
+            <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-transparent z-10 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-transparent to-transparent z-10 pointer-events-none" />
             
             <ParticleDust />
 
@@ -454,9 +324,9 @@ export const ConstellationTeam = ({ members }) => {
                     <defs>
                         <linearGradient id="pathGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                             <stop offset="0%" stopColor="transparent" />
-                            <stop offset="10%" stopColor="rgba(59, 130, 246, 0.4)" />
-                            <stop offset="50%" stopColor="rgba(124, 58, 237, 0.8)" />
-                            <stop offset="90%" stopColor="rgba(59, 130, 246, 0.4)" />
+                            <stop offset="10%" stopColor="rgba(255, 255, 255, 0.4)" />
+                            <stop offset="50%" stopColor="rgba(255, 255, 255, 1)" />
+                            <stop offset="90%" stopColor="rgba(255, 255, 255, 0.4)" />
                             <stop offset="100%" stopColor="transparent" />
                         </linearGradient>
                         <filter id="glowLine">

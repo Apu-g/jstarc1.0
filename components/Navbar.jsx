@@ -7,10 +7,6 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-
-
-// ... existing imports
-
 export const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -18,7 +14,7 @@ export const Navbar = () => {
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
+            setScrolled(window.scrollY > 20);
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
@@ -28,77 +24,133 @@ export const Navbar = () => {
         { label: "Home", href: "/" },
         { label: "About", href: "/about" },
         { label: "Events", href: "/events" },
-        { label: "Our Team", href: "/team" },
-        { label: "Contact", href: "/#contact" }
+        { label: "Team", href: "/team" }
     ];
 
     return (
-        <nav
-            className={cn(
-                "fixed top-0 left-0 w-full z-50 transition-all duration-300 px-6 py-4 flex justify-between items-center",
-                scrolled || pathname !== "/" ? "glass border-b border-white/5 shadow-glow-blue/10 py-3" : "bg-transparent py-5"
-            )}
-        >
-            <Link href="/" className="flex items-center gap-3 group">
-                {/* Logo Image */}
-                <img src="/assets/logo.png" alt="JStarc Logo" className="h-16 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] transition-all group-hover:drop-shadow-[0_0_15px_rgba(0,243,255,0.5)]" />
-                <span className="text-2xl font-bold tracking-tighter text-white group-hover:text-glow-blue transition-all duration-300">
-                    JSTARC<span className="text-neon-blue">.</span>
-                </span>
-            </Link>
-
-            {/* Desktop Menu */}
-            <div className="hidden md:flex gap-8 items-center">
-                {navLinks.map((link) => (
-                    <Link
-                        key={link.label}
-                        href={link.href}
-                        className={cn(
-                            "text-slate-300 hover:text-neon-blue hover:text-glow-blue font-medium transition-all duration-300 text-sm uppercase tracking-widest relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-neon-blue after:transition-all after:duration-300 hover:after:w-full",
-                            pathname === link.href && "text-white text-glow-blue after:w-full"
-                        )}
-                    >
-                        {link.label}
-                    </Link>
-                ))}
-            </div>
-
-            {/* Mobile Menu Icon */}
-            <button
-                className="md:hidden text-white"
-                onClick={() => setMobileMenuOpen(true)}
+        <>
+            <nav
+                className={cn(
+                    "fixed top-4 md:top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-5xl z-50 transition-all duration-300",
+                    "flex items-center justify-between border border-white/10 px-6 py-3 rounded-full",
+                    "bg-black/40 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.1)] hover:shadow-[0_0_12px_rgba(0,123,255,0.4)] transition-all duration-300",
+                    scrolled && "bg-black/80 shadow-2xl border-white/10"
+                )}
             >
-                <Menu size={28} />
-            </button>
+                {/* Logo */}
+                <Link href="/" className="flex-shrink-0">
+                    <div className="bg-white/5 p-1.5 rounded-full border border-white/10 hover:border-neon-blue/50 transition-colors">
+                        <img 
+                            src="/assets/logo.png" 
+                            alt="JStarc" 
+                            className="h-8 w-8 object-contain" 
+                        />
+                    </div>
+                </Link>
+
+                {/* Desktop Links */}
+                <div className="hidden md:flex items-center gap-8 ml-8">
+                    {navLinks.map((link) => (
+                        <Link
+                            key={link.label}
+                            href={link.href}
+                            className="relative overflow-hidden h-6 group"
+                        >
+                            <span 
+                                className={cn(
+                                    "block transition-transform duration-300 group-hover:-translate-y-full text-sm font-medium text-slate-300",
+                                    pathname === link.href && "text-white font-semibold"
+                                )}
+                            >
+                                {link.label}
+                            </span>
+                            <span 
+                                className={cn(
+                                    "block absolute top-full left-0 transition-transform duration-300 group-hover:translate-y-[-100%] text-sm font-medium text-neon-blue",
+                                    pathname === link.href && "text-neon-blue"
+                                )}
+                            >
+                                {link.label}
+                            </span>
+                        </Link>
+                    ))}
+                </div>
+
+                {/* Desktop Buttons */}
+                <div className="hidden md:flex items-center gap-4 ml-auto">
+                    <Link href="/#contact">
+                        <button className="border border-slate-600 hover:bg-slate-800 hover:border-slate-500 px-5 py-2 rounded-full text-sm font-medium text-white transition-all">
+                            Contact
+                        </button>
+                    </Link>
+                    <Link href="/#join">
+                        <button className="bg-white hover:bg-slate-100 text-black px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+                            Get Started
+                        </button>
+                    </Link>
+                </div>
+
+                {/* Mobile Menu Toggle */}
+                <button 
+                    className="md:hidden text-slate-300 hover:text-white"
+                    onClick={() => setMobileMenuOpen(true)}
+                >
+                    <Menu size={24} />
+                </button>
+            </nav>
 
             {/* Mobile Menu Overlay */}
             <AnimatePresence>
                 {mobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, x: "100%" }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: "100%" }}
-                        className="fixed inset-0 bg-dark/95 backdrop-blur-xl z-50 flex flex-col items-center justify-center gap-8 md:hidden border-l border-white/10"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="fixed inset-x-4 top-24 z-40 bg-black/90 backdrop-blur-xl border border-slate-700 rounded-2xl p-6 md:hidden flex flex-col gap-6 shadow-2xl"
                     >
-                        <button
-                            className="absolute top-6 right-6 text-white hover:text-neon-blue transition-colors"
-                            onClick={() => setMobileMenuOpen(false)}
-                        >
-                            <X size={32} />
-                        </button>
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.label}
-                                href={link.href}
+                        <div className="flex justify-between items-center mb-2">
+                            <span className="text-slate-400 text-sm uppercase tracking-widest">Menu</span>
+                            <button 
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="text-2xl font-bold text-white uppercase tracking-widest hover:text-neon-blue hover:text-glow-blue transition-all duration-300"
+                                className="p-2 bg-white/5 rounded-full text-white hover:bg-white/10"
                             >
-                                {link.label}
+                                <X size={20} />
+                            </button>
+                        </div>
+                        
+                        <div className="flex flex-col gap-4">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.label}
+                                    href={link.href}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className={cn(
+                                        "text-lg font-medium transition-colors",
+                                        pathname === link.href ? "text-neon-blue" : "text-slate-300 hover:text-white"
+                                    )}
+                                >
+                                    {link.label}
+                                </Link>
+                            ))}
+                        </div>
+
+                        <div className="h-px bg-slate-800 my-2" />
+
+                        <div className="flex flex-col gap-3">
+                            <Link href="/#contact" onClick={() => setMobileMenuOpen(false)}>
+                                <button className="w-full border border-slate-600 hover:bg-slate-800 px-4 py-3 rounded-xl text-sm font-medium text-white transition-all">
+                                    Contact Us
+                                </button>
                             </Link>
-                        ))}
+                            <Link href="/#join" onClick={() => setMobileMenuOpen(false)}>
+                                <button className="w-full bg-white hover:bg-slate-200 text-black px-4 py-3 rounded-xl text-sm font-bold transition-all shadow-lg shadow-white/10">
+                                    Get Started
+                                </button>
+                            </Link>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
-        </nav>
+        </>
     );
 };

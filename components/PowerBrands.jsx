@@ -21,13 +21,13 @@ export const PowerBrands = () => {
     }));
 
     return (
-        <section className="py-24 relative border-b border-white/5">
+        <section className="py-12 relative border-b border-white/5">
             <div className="container mx-auto px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false }}
-                    className="text-center mb-16"
+                    className="text-center mb-8"
                 >
                     <h2 className="text-4xl font-bold text-white mb-4 text-glow">Powerbrands</h2>
                     <div className="w-24 h-1 bg-gradient-to-r from-neon-blue to-neon-purple mx-auto rounded-full shadow-[0_0_10px_rgba(0,243,255,0.5)]" />

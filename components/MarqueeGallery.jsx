@@ -5,7 +5,7 @@ import { Marquee } from "@/components/ui/marquee";
 import { cn } from "@/lib/utils";
 import { useState, useEffect, useRef } from "react";
 
-// JStarc team photos
+// JStarc team photos (Fallback)
 const jstarcPhotos = [
     "/assets/jstarc_team/007ed55b-c516-468b-b3d6-9a1c62f5a38d.jpg",
     "/assets/jstarc_team/0e07f5c2-9b97-415a-b0b3-c148dceef470.jpg",
@@ -41,10 +41,6 @@ const jstarcPhotos = [
     "/assets/jstarc_team/f97ae5b1-aa63-4509-a08c-2913a97af5a9.jpg",
     "/assets/jstarc_team/fc3a60ca-ee90-425a-8050-01c494a9001e.jpg",
 ];
-
-// Split photos into two rows
-const firstRow = jstarcPhotos.slice(0, 17);
-const secondRow = jstarcPhotos.slice(17);
 
 // Photo card component with enhanced visual effects
 const PhotoCard = ({ src, index }) => {
@@ -130,8 +126,41 @@ const PhotoCard = ({ src, index }) => {
 };
 
 export const MarqueeGallery = () => {
+    const [firstRow, setFirstRow] = useState([]);
+    const [secondRow, setSecondRow] = useState([]);
+
+    useEffect(() => {
+        const fetchPhotos = async () => {
+            try {
+                const res = await fetch("/api/marquee", { cache: "no-store" });
+                const data = await res.json();
+                
+                let photosToUse = [];
+                if (data.files && data.files.length > 0) {
+                    photosToUse = data.files.map(f => f.src);
+                } else {
+                    photosToUse = jstarcPhotos; // Fallback
+                }
+
+                const mid = Math.ceil(photosToUse.length / 2);
+                setFirstRow(photosToUse.slice(0, mid));
+                setSecondRow(photosToUse.slice(mid));
+            } catch (e) {
+                console.error("Failed to fetch marquee photos", e);
+                // Fallback on error
+                const mid = Math.ceil(jstarcPhotos.length / 2);
+                setFirstRow(jstarcPhotos.slice(0, mid));
+                setSecondRow(jstarcPhotos.slice(mid));
+            }
+        };
+
+        fetchPhotos();
+        const interval = setInterval(fetchPhotos, 3000);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
-        <section className="py-24 relative overflow-hidden">
+        <section className="py-12 relative overflow-hidden">
             <div className="container mx-auto px-6 relative z-10">
                 {/* Heading */}
                 <motion.div
