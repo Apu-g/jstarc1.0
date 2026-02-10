@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/Navbar";
-import { Hero } from "@/components/Hero";
+import Hero3D from "@/components/Hero3D";
 import { HomeMasters } from "@/components/HomeMasters";
 import { PowerBrands } from "@/components/PowerBrands";
 import { Affiliations } from "@/components/Affiliations";
@@ -11,7 +11,7 @@ export default function Home() {
     return (
         <main className="min-h-screen text-slate-300 selection:bg-neon-blue selection:text-black">
             <Navbar />
-            <Hero />
+            <Hero3D />
             <HomeMasters />
             <PowerBrands />
             <Affiliations />

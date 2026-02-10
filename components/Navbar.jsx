@@ -6,11 +6,13 @@ import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLoading } from "@/contexts/LoadingContext";
 
 export const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const pathname = usePathname();
+    const { showNavbar } = useLoading();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -27,9 +29,17 @@ export const Navbar = () => {
         { label: "Team", href: "/team" }
     ];
 
+    // Don't render navbar until intro is complete (only on home page first visit)
+    if (!showNavbar && pathname === '/') {
+        return null;
+    }
+
     return (
         <>
-            <nav
+            <motion.nav
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
                 className={cn(
                     "fixed top-4 md:top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-5xl z-50 transition-all duration-300",
                     "flex items-center justify-between border border-white/10 px-6 py-3 rounded-full",
@@ -40,10 +50,10 @@ export const Navbar = () => {
                 {/* Logo */}
                 <Link href="/" className="flex-shrink-0">
                     <div className="bg-white/5 p-1.5 rounded-full border border-white/10 hover:border-neon-blue/50 transition-colors">
-                        <img 
-                            src="/assets/logo.png" 
-                            alt="JStarc" 
-                            className="h-8 w-8 object-contain" 
+                        <img
+                            src="/assets/logo.png"
+                            alt="JStarc"
+                            className="h-8 w-8 object-contain"
                         />
                     </div>
                 </Link>
@@ -56,7 +66,7 @@ export const Navbar = () => {
                             href={link.href}
                             className="relative overflow-hidden h-6 group"
                         >
-                            <span 
+                            <span
                                 className={cn(
                                     "block transition-transform duration-300 group-hover:-translate-y-full text-sm font-medium text-slate-300",
                                     pathname === link.href && "text-white font-semibold"
@@ -64,7 +74,7 @@ export const Navbar = () => {
                             >
                                 {link.label}
                             </span>
-                            <span 
+                            <span
                                 className={cn(
                                     "block absolute top-full left-0 transition-transform duration-300 group-hover:translate-y-[-100%] text-sm font-medium text-neon-blue",
                                     pathname === link.href && "text-neon-blue"
@@ -91,13 +101,13 @@ export const Navbar = () => {
                 </div>
 
                 {/* Mobile Menu Toggle */}
-                <button 
+                <button
                     className="md:hidden text-slate-300 hover:text-white"
                     onClick={() => setMobileMenuOpen(true)}
                 >
                     <Menu size={24} />
                 </button>
-            </nav>
+            </motion.nav>
 
             {/* Mobile Menu Overlay */}
             <AnimatePresence>
@@ -110,14 +120,14 @@ export const Navbar = () => {
                     >
                         <div className="flex justify-between items-center mb-2">
                             <span className="text-slate-400 text-sm uppercase tracking-widest">Menu</span>
-                            <button 
+                            <button
                                 onClick={() => setMobileMenuOpen(false)}
                                 className="p-2 bg-white/5 rounded-full text-white hover:bg-white/10"
                             >
                                 <X size={20} />
                             </button>
                         </div>
-                        
+
                         <div className="flex flex-col gap-4">
                             {navLinks.map((link) => (
                                 <Link
