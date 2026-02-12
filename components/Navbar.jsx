@@ -116,7 +116,8 @@ export const Navbar = () => {
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="fixed inset-x-4 top-24 z-40 bg-black/90 backdrop-blur-xl border border-slate-700 rounded-2xl p-6 md:hidden flex flex-col gap-6 shadow-2xl"
+                        transition={{ duration: 0.2 }}
+                        className="fixed inset-x-4 top-24 z-[60] bg-black/90 backdrop-blur-xl border border-slate-700 rounded-2xl p-6 md:hidden flex flex-col gap-6 shadow-2xl"
                     >
                         <div className="flex justify-between items-center mb-2">
                             <span className="text-slate-400 text-sm uppercase tracking-widest">Menu</span>

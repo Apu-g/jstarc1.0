@@ -35,15 +35,15 @@ export const HomeMasters = () => {
                     <div className="w-24 h-1.5 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
                 </motion.div>
 
-                <div className="flex flex-wrap justify-center gap-12 md:gap-20">
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-12 md:gap-20">
                     {masters.map((master) => (
-                        <CardContainer key={master.id} className="inter-var">
-                            <CardBody className="glass relative group/card border-transparent w-auto sm:w-[24rem] h-auto rounded-xl p-8 hover:shadow-glow transition-all duration-300">
+                        <CardContainer key={master.id} className="inter-var w-full sm:w-auto">
+                            <CardBody className="glass relative group/card border-transparent w-[90vw] sm:w-[24rem] h-auto rounded-xl p-4 sm:p-8 hover:shadow-glow transition-all duration-300">
                                 <CardItem
                                     translateZ="50"
-                                    className="w-full flex justify-center mt-4"
+                                    className="w-full flex justify-center mt-2 sm:mt-4"
                                 >
-                                    <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-white/10 shadow-lg">
+                                    <div className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 border-white/10 shadow-lg">
                                         <img
                                             src={master.img}
                                             alt={master.name}
@@ -53,21 +53,21 @@ export const HomeMasters = () => {
                                 </CardItem>
                                 <CardItem
                                     translateZ="60"
-                                    className="text-2xl font-bold text-white text-center w-full mt-6"
+                                    className="text-xl sm:text-2xl font-bold text-white text-center w-full mt-4 sm:mt-6"
                                 >
                                     {master.name}
                                 </CardItem>
                                 <CardItem
                                     as="p"
                                     translateZ="70"
-                                    className="text-primary font-bold text-center w-full mt-2 text-sm uppercase tracking-wider"
+                                    className="text-primary font-bold text-center w-full mt-1 sm:mt-2 text-xs sm:text-sm uppercase tracking-wider"
                                 >
                                     {master.role}
                                 </CardItem>
                                 <CardItem
                                     as="p"
                                     translateZ="50"
-                                    className="text-muted text-sm max-w-sm mt-4 text-center w-full leading-relaxed"
+                                    className="text-muted text-xs sm:text-sm max-w-sm mt-3 sm:mt-4 text-center w-full leading-relaxed"
                                 >
                                     {master.desc}
                                 </CardItem>

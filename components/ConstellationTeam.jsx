@@ -175,21 +175,37 @@ const ConstellationNode = ({ member, xPos, yPos, isActive, onFocus }) => {
                 {/* Occurrence Indicator / Info Panel */}
                 <AnimatePresence>
                     {isActiveState && (
-                        <motion.div
-                            initial={{ opacity: 0, x: isRightSide ? 20 : -20, scale: 0.9 }}
-                            animate={{ opacity: 1, x: 0, scale: 1 }}
-                            exit={{ opacity: 0, x: isRightSide ? 20 : -20, scale: 0.9 }}
-                            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                            onClick={handleClick}
-                            className={cn(
-                                "absolute top-1/2 -translate-y-1/2 w-64 pointer-events-none md:pointer-events-auto hidden md:block cursor-pointer transition-colors",
-                                isRightSide ? "right-full mr-6 text-right" : "left-full ml-6 text-left"
-                            )}
-                        >
-                            <h4 className="text-2xl font-bold text-white mb-1 drop-shadow-md">{member.name}</h4>
-                            <p className="text-sm uppercase tracking-[0.2em] font-bold opacity-90" style={{ color }}>{member.rank}</p>
-                            {member.desc && <p className="text-slate-300 text-sm mt-2 font-medium opacity-80">{member.desc}</p>}
-                        </motion.div>
+                        <>
+                            {/* Desktop Info Panel */}
+                            <motion.div
+                                initial={{ opacity: 0, x: isRightSide ? 20 : -20, scale: 0.9 }}
+                                animate={{ opacity: 1, x: 0, scale: 1 }}
+                                exit={{ opacity: 0, x: isRightSide ? 20 : -20, scale: 0.9 }}
+                                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                                onClick={handleClick}
+                                className={cn(
+                                    "absolute top-1/2 -translate-y-1/2 w-64 pointer-events-none md:pointer-events-auto hidden md:block cursor-pointer transition-colors",
+                                    isRightSide ? "right-full mr-6 text-right" : "left-full ml-6 text-left"
+                                )}
+                            >
+                                <h4 className="text-2xl font-bold text-white mb-1 drop-shadow-md">{member.name}</h4>
+                                <p className="text-sm uppercase tracking-[0.2em] font-bold opacity-90" style={{ color }}>{member.rank}</p>
+                                {member.desc && <p className="text-slate-300 text-sm mt-2 font-medium opacity-80">{member.desc}</p>}
+                            </motion.div>
+
+                            {/* Mobile Info Panel (Below the Node) */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                                onClick={handleClick}
+                                className="absolute top-full mt-4 left-1/2 -translate-x-1/2 w-64 text-center md:hidden pointer-events-auto z-50 bg-black/60 backdrop-blur-sm p-3 rounded-xl border border-white/10"
+                            >
+                                <h4 className="text-xl font-bold text-white mb-1">{member.name}</h4>
+                                <p className="text-xs uppercase tracking-[0.2em] font-bold opacity-90" style={{ color }}>{member.rank}</p>
+                            </motion.div>
+                        </>
                     )}
                 </AnimatePresence>
             </div>

@@ -173,15 +173,35 @@ const EventGallery = ({ event, onClose }) => {
 
                         {/* Image Container */}
                         <motion.div 
-                            className="relative max-w-full max-h-full p-4 flex items-center justify-center"
+                            className="relative max-w-full max-h-full p-4 flex items-center justify-center touch-none"
                             onClick={(e) => e.stopPropagation()}
-                            layoutId={`image-${images[selectedImageIndex]}`} 
+                            key={selectedImageIndex}
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -20 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            drag="x"
+                            dragConstraints={{ left: 0, right: 0 }}
+                            dragElastic={1}
+                            onDragEnd={(e, { offset, velocity }) => {
+                                const swipe = offset.x;
+                                if (swipe < -50) {
+                                    handleNext();
+                                } else if (swipe > 50) {
+                                    handlePrev();
+                                }
+                            }}
                         >
                             <img 
                                 src={images[selectedImageIndex]} 
                                 alt="Full screen preview"
-                                className="max-w-[90vw] max-h-[85vh] object-contain rounded-lg shadow-2xl"
+                                className="max-w-[95vw] max-h-[80vh] object-contain rounded-lg shadow-2xl pointer-events-none select-none"
                             />
+                            
+                            {/* Mobile Hint */}
+                            <div className="absolute top-full mt-4 md:hidden text-white/50 text-xs animate-pulse">
+                                Swipe to navigate
+                            </div>
                             
                             {/* Toolbar */}
                             <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-black/50 backdrop-blur-md px-6 py-3 rounded-full border border-white/10">

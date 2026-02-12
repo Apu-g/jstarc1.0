@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { blackbelts } from "@/data/blackbelts";
 import { useLoading } from "@/contexts/LoadingContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // --- Components ---
 
@@ -30,7 +31,7 @@ const LoadingScreen = ({ onComplete }) => {
 
       {/* Logo text */}
       <motion.h1
-        className="text-5xl md:text-7xl font-black text-white mb-2 tracking-tighter"
+        className="text-4xl md:text-7xl font-black text-white mb-2 tracking-tighter"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.3, duration: 0.6 }}
@@ -38,7 +39,7 @@ const LoadingScreen = ({ onComplete }) => {
         JSTARC
       </motion.h1>
       <motion.p
-        className="text-lg tracking-[0.5em] text-slate-400"
+        className="text-sm md:text-lg tracking-[0.5em] text-slate-400"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
@@ -61,16 +62,33 @@ const LoadingScreen = ({ onComplete }) => {
 };
 
 const IntroAnimation = ({ onComplete }) => {
+  const isMobile = useIsMobile();
+  
   // Use first 4 blackbelts or placeholders if not enough
-  const displayFighters = blackbelts.slice(0, 4).map((b, i) => ({
-    src: b.img,
-    ...[
+  const displayFighters = blackbelts.slice(0, 4).map((b, i) => {
+    // Mobile positions: closer to center, vertical spread
+    // Desktop positions: spread out horizontally
+    const mobilePos = [
+      { x: -80, y: -120, rotate: -10, delay: 0 },
+      { x: 80, y: -60, rotate: 10, delay: 0.1 },
+      { x: -60, y: 100, rotate: -5, delay: 0.2 },
+      { x: 60, y: 140, rotate: 5, delay: 0.3 }
+    ];
+
+    const desktopPos = [
       { x: -300, y: -100, rotate: -15, delay: 0 },
       { x: 300, y: -50, rotate: 12, delay: 0.1 },
       { x: -200, y: 100, rotate: -8, delay: 0.2 },
       { x: 250, y: 80, rotate: 10, delay: 0.3 }
-    ][i % 4]
-  }));
+    ];
+
+    const pos = isMobile ? mobilePos[i % 4] : desktopPos[i % 4];
+
+    return {
+      src: b.img,
+      ...pos
+    };
+  });
 
   return (
     <motion.div
@@ -84,13 +102,13 @@ const IntroAnimation = ({ onComplete }) => {
       <motion.div
         className="absolute z-10 flex flex-col items-center"
         initial={{ scale: 3, y: 0 }}
-        animate={{ scale: 1, y: -180 }}
+        animate={{ scale: 1, y: isMobile ? -120 : -180 }}
         transition={{ duration: 1.5, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
       >
-        <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter">
+        <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter">
           JSTARC
         </h1>
-        <p className="text-center text-lg tracking-[0.5em] text-slate-400">
+        <p className="text-center text-sm md:text-lg tracking-[0.5em] text-slate-400">
           BENGALURU
         </p>
       </motion.div>
@@ -110,7 +128,7 @@ const IntroAnimation = ({ onComplete }) => {
             z: -1000,
           }}
           animate={{
-            scale: 1.4,
+            scale: isMobile ? 1 : 1.4,
             x: fighter.x,
             y: fighter.y,
             rotateY: 0,
@@ -129,7 +147,7 @@ const IntroAnimation = ({ onComplete }) => {
             <img
               src={fighter.src}
               alt="Fighter"
-              className="w-40 md:w-56 h-auto rounded-lg object-cover"
+              className="w-28 md:w-56 h-auto rounded-lg object-cover"
               style={{
                 boxShadow: "0 0 40px rgba(0, 243, 255, 0.3), 0 0 80px rgba(0, 243, 255, 0.15)",
               }}
@@ -161,7 +179,7 @@ const IntroAnimation = ({ onComplete }) => {
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4">
       {/* Background glow */}
       <div
         className="absolute inset-0 opacity-30"
@@ -178,18 +196,18 @@ const HeroSection = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        <img src="/assets/logo.png" alt="JStarc Logo" className="w-24 h-24 md:w-32 md:h-32 object-contain mb-6 drop-shadow-[0_0_15px_rgba(0,243,255,0.5)]" />
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 tracking-tighter">
+        <img src="/assets/logo.png" alt="JStarc Logo" className="w-20 h-20 md:w-32 md:h-32 object-contain mb-6 drop-shadow-[0_0_15px_rgba(0,243,255,0.5)]" />
+        <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 tracking-tighter">
           JSTARC
         </h1>
-        <p className="text-xl md:text-2xl tracking-[0.6em] text-slate-400 mt-1 pl-2">
+        <p className="text-base sm:text-xl md:text-2xl tracking-[0.4em] md:tracking-[0.6em] text-slate-400 mt-1 pl-1">
           BENGALURU
         </p>
       </motion.div>
 
       {/* Tagline */}
       <motion.p
-        className="mt-8 text-xl md:text-2xl font-light text-slate-300 z-10"
+        className="mt-8 text-lg sm:text-xl md:text-2xl font-light text-slate-300 z-10 text-center max-w-md md:max-w-none"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.8 }}
@@ -201,7 +219,7 @@ const HeroSection = () => {
       {/* CTA Button */}
       <motion.a
         href="#contact"
-        className="mt-10 z-10 text-sm tracking-widest uppercase px-10 py-4 border border-[#00f3ff]/50 text-white hover:bg-[#00f3ff]/10 hover:shadow-[0_0_20px_rgba(0,243,255,0.3)] transition-all duration-300"
+        className="mt-10 z-10 text-xs md:text-sm tracking-widest uppercase px-8 py-3 md:px-10 md:py-4 border border-[#00f3ff]/50 text-white hover:bg-[#00f3ff]/10 hover:shadow-[0_0_20px_rgba(0,243,255,0.3)] transition-all duration-300"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.9, duration: 0.6 }}
@@ -217,7 +235,7 @@ const HeroSection = () => {
         transition={{ delay: 1.2 }}
       >
         <div className="w-px h-10 bg-gradient-to-b from-[#00f3ff]/60 to-transparent" />
-        <span className="text-xs tracking-[0.3em] text-slate-500 uppercase">
+        <span className="text-[10px] md:text-xs tracking-[0.3em] text-slate-500 uppercase">
           Scroll
         </span>
       </motion.div>
