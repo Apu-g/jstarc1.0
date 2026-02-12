@@ -151,38 +151,25 @@ const ConstellationNode = ({ member, xPos, yPos, isActive, onFocus }) => {
                     )}
 
                     {/* Node Image Circle */}
-                    <motion.div
-                        layoutId={`image-container-${member.id}`}
-                        className="relative w-24 h-24 md:w-32 md:h-32 rounded-full p-[2px] bg-black overflow-hidden z-20"
+                    <div
+                        className="relative w-24 h-24 md:w-32 md:h-32 rounded-full p-[2px] transition-all duration-300 bg-black overflow-hidden"
                         style={{
                             boxShadow: isActiveState ? `0 0 20px rgba(233,243,255,0.7), 0 0 40px rgba(180,210,255,0.35)` : '0 0 15px rgba(233,243,255,0.1)',
-                            border: `4px solid ${isActiveState ? '#E9F3FF' : 'rgba(233,243,255,0.2)'}`,
-                            borderRadius: "50%"
-                        }}
-                        transition={{
-                            type: "spring",
-                            stiffness: 300,
-                            damping: 30,
-                            mass: 0.8
+                            border: `4px solid ${isActiveState ? '#E9F3FF' : 'rgba(233,243,255,0.2)'}`
                         }}
                     >
                         <motion.img
                             layoutId={`image-${member.id}`}
                             src={member.img}
                             alt={member.name}
-                            className="w-full h-full object-cover will-change-transform"
+                            className="w-full h-full object-cover transition-all duration-500"
                             style={{
                                 filter: isActiveState ? "grayscale(0%)" : "grayscale(100%) brightness(0.7)",
                                 objectPosition: member.facePos || "center top"
                             }}
-                            transition={{
-                                type: "spring",
-                                stiffness: 300,
-                                damping: 30,
-                                mass: 0.8
-                            }}
+                            transition={{ duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
                         />
-                    </motion.div>
+                    </div>
                 </motion.div>
 
                 {/* Occurrence Indicator / Info Panel */}
