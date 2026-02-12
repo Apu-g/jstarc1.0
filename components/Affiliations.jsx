@@ -11,19 +11,19 @@ const affiliations = [
 
 export const Affiliations = () => {
     return (
-        <section className="py-12 relative overflow-hidden">
+        <section className="py-8 md:py-12 relative overflow-hidden">
             {/* Background Decoration */}
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-50" />
 
-            <div className="container mx-auto px-6 relative z-10">
+            <div className="container mx-auto px-4 md:px-6 relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false }}
-                    className="text-center mb-8"
+                    className="text-center mb-6 md:mb-8"
                 >
-                    <h2 className="text-4xl font-bold text-white mb-4">Affiliated To</h2>
-                    <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
+                    <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4">Affiliated To</h2>
+                    <div className="w-16 md:w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
                 </motion.div>
 
                 <div className="flex flex-nowrap justify-between gap-2 md:justify-center md:gap-12 overflow-x-auto md:overflow-visible">

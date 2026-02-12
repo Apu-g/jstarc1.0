@@ -43,7 +43,7 @@ const values = [
 
 export const About = () => {
     return (
-        <section id="about" className="relative py-24 text-white overflow-hidden">
+        <section id="about" className="relative py-12 md:py-24 text-white overflow-hidden">
             {/* Background Pattern - subtle overlay */}
             <div className="absolute inset-0 bg-[url('/assets/pattern.png')] opacity-5 mix-blend-overlay pointer-events-none" />
 

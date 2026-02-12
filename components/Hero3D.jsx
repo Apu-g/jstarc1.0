@@ -12,50 +12,66 @@ const LoadingScreen = ({ onComplete }) => {
   return (
     <motion.div
       className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black"
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      onAnimationComplete={onComplete}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: 0.5, ease: "easeInOut" } }}
+      onAnimationComplete={(definition) => {
+        if (definition === "exit") onComplete();
+      }}
     >
-      {/* Spinning ring */}
-      <div className="relative mb-8">
-        <div className="w-24 h-24 rounded-full border-2 border-slate-700 animate-spin"
-          style={{
-            borderTopColor: '#00f3ff',
-            borderRightColor: '#00f3ff',
-          }}
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <img src="/assets/logo.png" alt="Logo" className="w-12 h-12 object-contain" />
+      {/* Centered Container for Logo and Loader */}
+      <div className="flex flex-col items-center justify-center absolute inset-0">
+        {/* Spinning ring with Logo */}
+        <div className="relative mb-8">
+          <motion.div
+            className="w-24 h-24 rounded-full border-2 border-slate-700"
+            style={{
+              borderTopColor: '#00f3ff',
+              borderRightColor: '#00f3ff',
+            }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <motion.img
+              src="/assets/logo.png"
+              alt="Logo"
+              className="w-12 h-12 object-contain"
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5, ease: "backOut" }}
+            />
+          </div>
         </div>
-      </div>
 
-      {/* Logo text */}
-      <motion.h1
-        className="text-4xl md:text-7xl font-black text-white mb-2 tracking-tighter"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3, duration: 0.6 }}
-      >
-        JSTARC
-      </motion.h1>
-      <motion.p
-        className="text-sm md:text-lg tracking-[0.5em] text-slate-400"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-      >
-        BENGALURU
-      </motion.p>
+        {/* Logo text */}
+        <motion.h1
+          className="text-4xl md:text-7xl font-black text-white mb-2 tracking-tighter text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+        >
+          JSTARC
+        </motion.h1>
+        <motion.p
+          className="text-sm md:text-lg tracking-[0.5em] text-slate-400 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+        >
+          BENGALURU
+        </motion.p>
 
-      {/* Loading bar */}
-      <div className="mt-10 w-48 h-0.5 bg-slate-800 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full bg-[#00f3ff] rounded-full"
-          initial={{ width: "0%" }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 2, ease: "easeInOut" }}
-          onAnimationComplete={onComplete}
-        />
+        {/* Loading bar */}
+        <div className="mt-10 w-48 h-0.5 bg-slate-800 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-[#00f3ff] rounded-full"
+            initial={{ width: "0%" }}
+            animate={{ width: "100%" }}
+            transition={{ duration: 2, ease: [0.22, 1, 0.36, 1] }}
+            onAnimationComplete={onComplete}
+          />
+        </div>
       </div>
     </motion.div>
   );
@@ -63,7 +79,7 @@ const LoadingScreen = ({ onComplete }) => {
 
 const IntroAnimation = ({ onComplete }) => {
   const isMobile = useIsMobile();
-  
+
   // Use first 4 blackbelts or placeholders if not enough
   const displayFighters = blackbelts.slice(0, 4).map((b, i) => {
     // Mobile positions: closer to center, vertical spread
@@ -271,7 +287,7 @@ const Hero3D = () => {
   };
 
   return (
-    <div className="relative bg-black min-h-screen">
+    <div className="relative min-h-screen">
       <AnimatePresence mode="wait">
         {stage === 'loading' && !introShown && (
           <LoadingScreen key="loader" onComplete={() => setStage('intro')} />

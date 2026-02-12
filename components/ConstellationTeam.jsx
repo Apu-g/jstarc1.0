@@ -74,10 +74,10 @@ const ConstellationNode = ({ member, xPos, yPos, isActive, onFocus }) => {
     const color = getBeltColor(member.rank);
     const [isHovered, setIsHovered] = useState(false);
     const [isSparkling, setIsSparkling] = useState(false);
-    
+
     // Active state is either scrolled-to (isActive) or hovered
     const isActiveState = isActive || isHovered;
-    
+
     // Determine info panel position: if node is on right (xPos > 0), show panel on left. And vice versa.
     const isRightSide = xPos > 0;
 
@@ -109,15 +109,15 @@ const ConstellationNode = ({ member, xPos, yPos, isActive, onFocus }) => {
             className="absolute w-full flex justify-center will-change-transform z-20"
             style={{ top: yPos }}
             initial={{ opacity: 0 }}
-            animate={{ 
+            animate={{
                 opacity: 1,
                 zIndex: isHovered ? 50 : (isActive ? 40 : 20)
             }}
             transition={{ duration: 0.5 }}
         >
-            <div 
+            <div
                 className="relative flex items-center justify-center"
-                style={{ 
+                style={{
                     transform: `translateX(${xPos}px)`,
                 }}
                 onMouseEnter={handleMouseEnter}
@@ -127,7 +127,7 @@ const ConstellationNode = ({ member, xPos, yPos, isActive, onFocus }) => {
                 <motion.div
                     className="relative group cursor-pointer will-change-transform"
                     onClick={handleClick}
-                    animate={{ 
+                    animate={{
                         scale: isActiveState ? 1.2 : 1,
                     }}
                     whileHover={{ scale: 1.25 }}
@@ -135,7 +135,7 @@ const ConstellationNode = ({ member, xPos, yPos, isActive, onFocus }) => {
                 >
                     {/* Pulsing Glow (Active/Hovered) */}
                     {isActiveState && (
-                        <motion.div 
+                        <motion.div
                             className="absolute -inset-8 rounded-full blur-xl opacity-40 pointer-events-none"
                             style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}
                             animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.2, 1] }}
@@ -151,25 +151,38 @@ const ConstellationNode = ({ member, xPos, yPos, isActive, onFocus }) => {
                     )}
 
                     {/* Node Image Circle */}
-                    <div 
-                        className="relative w-24 h-24 md:w-32 md:h-32 rounded-full p-[2px] transition-all duration-300 bg-black overflow-hidden"
-                        style={{ 
+                    <motion.div
+                        layoutId={`image-container-${member.id}`}
+                        className="relative w-24 h-24 md:w-32 md:h-32 rounded-full p-[2px] bg-black overflow-hidden z-20"
+                        style={{
                             boxShadow: isActiveState ? `0 0 20px rgba(233,243,255,0.7), 0 0 40px rgba(180,210,255,0.35)` : '0 0 15px rgba(233,243,255,0.1)',
-                            border: `4px solid ${isActiveState ? '#E9F3FF' : 'rgba(233,243,255,0.2)'}`
+                            border: `4px solid ${isActiveState ? '#E9F3FF' : 'rgba(233,243,255,0.2)'}`,
+                            borderRadius: "50%"
+                        }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 30,
+                            mass: 0.8
                         }}
                     >
-                        <motion.img 
+                        <motion.img
                             layoutId={`image-${member.id}`}
-                            src={member.img} 
-                            alt={member.name} 
-                            className="w-full h-full object-cover transition-all duration-500"
+                            src={member.img}
+                            alt={member.name}
+                            className="w-full h-full object-cover will-change-transform"
                             style={{
                                 filter: isActiveState ? "grayscale(0%)" : "grayscale(100%) brightness(0.7)",
                                 objectPosition: member.facePos || "center top"
                             }}
-                            transition={{ duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
+                            transition={{
+                                type: "spring",
+                                stiffness: 300,
+                                damping: 30,
+                                mass: 0.8
+                            }}
                         />
-                    </div>
+                    </motion.div>
                 </motion.div>
 
                 {/* Occurrence Indicator / Info Panel */}
@@ -218,11 +231,11 @@ export const ConstellationTeam = ({ members }) => {
     const [dimensions, setDimensions] = useState({ width: 1000, height: 800 });
     const [activeIndex, setActiveIndex] = useState(0);
     const [focusedMember, setFocusedMember] = useState(null);
-    
+
     // Spacing configuration
-    const NODE_SPACING = 300; 
+    const NODE_SPACING = 300;
     const TOTAL_HEIGHT = members.length * NODE_SPACING + 400;
-    
+
     // Update dimensions on resize
     useEffect(() => {
         const updateDimensions = () => {
@@ -233,7 +246,7 @@ export const ConstellationTeam = ({ members }) => {
                 });
             }
         };
-        
+
         updateDimensions();
         window.addEventListener('resize', updateDimensions);
         return () => window.removeEventListener('resize', updateDimensions);
@@ -258,7 +271,7 @@ export const ConstellationTeam = ({ members }) => {
         let d = `M ${dimensions.width / 2 + nodePositions[0].x} ${nodePositions[0].y}`;
         for (let i = 0; i < nodePositions.length - 1; i++) {
             const curr = nodePositions[i];
-            const next = nodePositions[i+1];
+            const next = nodePositions[i + 1];
             const p1 = { x: dimensions.width / 2 + curr.x, y: curr.y };
             const p2 = { x: dimensions.width / 2 + next.x, y: next.y };
             const cp1 = { x: p1.x, y: (p1.y + p2.y) / 2 };
@@ -272,7 +285,7 @@ export const ConstellationTeam = ({ members }) => {
         target: containerRef,
         offset: ["start start", "end end"]
     });
-    
+
     // Sync active index with scroll
     useMotionValueEvent(scrollYProgress, "change", (latest) => {
         const scrollPx = latest * (TOTAL_HEIGHT - window.innerHeight);
@@ -281,7 +294,7 @@ export const ConstellationTeam = ({ members }) => {
 
         let closestIndex = 0;
         let minDiff = Infinity;
-        
+
         nodePositions.forEach((pos, index) => {
             const diff = Math.abs(pos.y - currentY);
             if (diff < minDiff) {
@@ -289,7 +302,7 @@ export const ConstellationTeam = ({ members }) => {
                 closestIndex = index;
             }
         });
-        
+
         if (closestIndex !== activeIndex) {
             setActiveIndex(closestIndex);
         }
@@ -298,14 +311,14 @@ export const ConstellationTeam = ({ members }) => {
     const focusedIndex = focusedMember ? members.findIndex(m => m.id === focusedMember.id) : -1;
 
     return (
-        <section 
+        <section
             className="relative w-full bg-transparent"
             style={{ height: TOTAL_HEIGHT }}
         >
             <AnimatePresence>
                 {focusedMember && (
-                    <FocusModeOverlay 
-                        member={focusedMember} 
+                    <FocusModeOverlay
+                        member={focusedMember}
                         index={focusedIndex}
                         onClose={() => setFocusedMember(null)}
                     />
@@ -314,20 +327,20 @@ export const ConstellationTeam = ({ members }) => {
 
             {/* Background Layers - Seamless Blend */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-transparent pointer-events-none" />
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} 
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
             />
-            
+
             {/* Top and Bottom Feathering for extra smoothness */}
             <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-transparent z-10 pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-transparent to-transparent z-10 pointer-events-none" />
-            
+
             <ParticleDust />
 
             <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden">
                 {/* Header */}
                 <div className="absolute top-20 left-0 w-full text-center z-20 pointer-events-none">
-                     <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-2 text-glow">
+                    <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-2 text-glow">
                         Black Belts
                     </h2>
                     <p className="text-blue-200/50 uppercase tracking-[0.3em] text-sm font-light">
@@ -346,24 +359,24 @@ export const ConstellationTeam = ({ members }) => {
                             <stop offset="100%" stopColor="transparent" />
                         </linearGradient>
                         <filter id="glowLine">
-                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
                             <feMerge>
-                                <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
+                                <feMergeNode in="coloredBlur" />
+                                <feMergeNode in="SourceGraphic" />
                             </feMerge>
                         </filter>
                     </defs>
-                    
+
                     {/* Background Trace Line */}
-                    <path 
+                    <path
                         d={pathD}
                         fill="none"
                         stroke="rgba(255, 255, 255, 0.05)"
                         strokeWidth="1"
                     />
-                    
+
                     {/* Animated Drawing Line - Synced with scroll */}
-                    <motion.path 
+                    <motion.path
                         d={pathD}
                         fill="none"
                         stroke="url(#pathGradient)"
@@ -376,7 +389,7 @@ export const ConstellationTeam = ({ members }) => {
 
                 {/* Nodes */}
                 {members.map((member, index) => (
-                    <ConstellationNode 
+                    <ConstellationNode
                         key={member.id}
                         member={member}
                         xPos={nodePositions[index]?.x || 0}

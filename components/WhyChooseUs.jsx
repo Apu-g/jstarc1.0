@@ -40,7 +40,7 @@ export const WhyChooseUs = () => {
                     <div className="w-32 h-1 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-green mx-auto rounded-full shadow-[0_0_10px_rgba(0,243,255,0.5)]" />
                 </motion.div>
 
-                <div className="flex flex-row md:grid md:grid-cols-3 gap-4 md:gap-10 overflow-x-auto pb-6 md:pb-0 snap-x snap-mandatory scrollbar-hide">
+                <div className="flex flex-col gap-6 md:grid md:grid-cols-3 md:gap-10">
                     {features.map((feature, index) => (
                         <motion.div
                             key={index}
@@ -48,7 +48,7 @@ export const WhyChooseUs = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: false }}
                             transition={{ delay: index * 0.2, duration: 0.6 }}
-                            className="h-full group min-w-[280px] w-[85vw] md:w-auto snap-center"
+                            className="h-full group w-full"
                         >
                             <StarBorder as="div" className="w-full h-full" color="#00f3ff" speed="6s">
                                 <SpotlightCard className="h-full text-center p-6 md:p-8 bg-black/40 border-none backdrop-blur-md" spotlightColor="rgba(0, 243, 255, 0.15)">

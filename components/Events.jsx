@@ -26,7 +26,7 @@ export const Events = () => {
     }, []);
 
     return (
-        <section id="events" className="relative py-24 text-white">
+        <section id="events" className="relative py-12 md:py-24 text-white">
             {/* Background decoration */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/10 to-transparent opacity-50" />
