@@ -26,7 +26,7 @@ export const Affiliations = () => {
                     <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
                 </motion.div>
 
-                <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+                <div className="flex flex-nowrap justify-between gap-2 md:justify-center md:gap-12 overflow-x-auto md:overflow-visible">
                     {affiliations.map((src, index) => (
                         <motion.div
                             key={index}
@@ -34,13 +34,13 @@ export const Affiliations = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: false }}
                             transition={{ delay: index * 0.1 }}
-                            className="group relative w-40 h-40 md:w-56 md:h-56 flex items-center justify-center p-6 glass hover:shadow-glow hover:-translate-y-1 transition-all duration-300"
+                            className="group relative w-16 h-16 sm:w-24 sm:h-24 md:w-56 md:h-56 flex-shrink-0 flex items-center justify-center p-1 md:p-6 glass hover:shadow-glow hover:-translate-y-1 transition-all duration-300"
                         >
                             {/* Glass Reflection */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl md:rounded-2xl pointer-events-none" />
 
                             {/* Logo Container */}
-                            <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-xl bg-white/90 p-4 shadow-sm">
+                            <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-lg md:rounded-xl bg-white/90 p-1 md:p-4 shadow-sm">
                                 <img
                                     src={src}
                                     alt={`Affiliation ${index + 1}`}

@@ -40,7 +40,7 @@ export const WhyChooseUs = () => {
                     <div className="w-32 h-1 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-green mx-auto rounded-full shadow-[0_0_10px_rgba(0,243,255,0.5)]" />
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div className="flex flex-row md:grid md:grid-cols-3 gap-4 md:gap-10 overflow-x-auto pb-6 md:pb-0 snap-x snap-mandatory scrollbar-hide">
                     {features.map((feature, index) => (
                         <motion.div
                             key={index}
@@ -48,15 +48,15 @@ export const WhyChooseUs = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: false }}
                             transition={{ delay: index * 0.2, duration: 0.6 }}
-                            className="h-full group"
+                            className="h-full group min-w-[280px] w-[85vw] md:w-auto snap-center"
                         >
                             <StarBorder as="div" className="w-full h-full" color="#00f3ff" speed="6s">
-                                <SpotlightCard className="h-full text-center p-8 bg-black/40 border-none backdrop-blur-md" spotlightColor="rgba(0, 243, 255, 0.15)">
-                                    <div className={`w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-8 ${feature.color} group-hover:scale-110 transition-transform duration-500`}>
-                                        <feature.icon size={40} strokeWidth={1.5} />
+                                <SpotlightCard className="h-full text-center p-6 md:p-8 bg-black/40 border-none backdrop-blur-md" spotlightColor="rgba(0, 243, 255, 0.15)">
+                                    <div className={`w-16 h-16 md:w-24 md:h-24 mx-auto rounded-full flex items-center justify-center mb-6 md:mb-8 ${feature.color} group-hover:scale-110 transition-transform duration-500`}>
+                                        <feature.icon size={32} className="md:w-10 md:h-10" strokeWidth={1.5} />
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-neon-blue group-hover:text-glow-blue transition-all duration-300">{feature.title}</h3>
-                                    <p className="text-slate-300 leading-relaxed group-hover:text-white transition-colors duration-300">
+                                    <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-white group-hover:text-neon-blue group-hover:text-glow-blue transition-all duration-300">{feature.title}</h3>
+                                    <p className="text-sm md:text-base text-slate-300 leading-relaxed group-hover:text-white transition-colors duration-300">
                                         {feature.description}
                                     </p>
                                 </SpotlightCard>

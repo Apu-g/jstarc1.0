@@ -78,7 +78,7 @@ const PhotoCard = ({ src, index }) => {
         <div
             ref={cardRef}
             className={cn(
-                "photo-card relative h-44 w-72 flex-shrink-0 cursor-pointer overflow-hidden rounded-xl group",
+                "photo-card relative h-16 w-20 md:h-44 md:w-72 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg md:rounded-xl group",
                 "border border-white/10 bg-black/20",
                 "transition-all duration-300 ease-in-out",
                 "hover:border-neon-blue/60 hover:shadow-[0_0_15px_rgba(0,243,255,0.3)]",
@@ -180,16 +180,16 @@ export const MarqueeGallery = () => {
             </div>
 
             {/* Marquee Photo Gallery */}
-            <div className="gallery-container relative flex w-full flex-col items-center justify-center gap-6 overflow-hidden py-8">
+            <div className="gallery-container relative flex w-full flex-col items-center justify-center gap-4 md:gap-6 overflow-hidden py-4 md:py-8">
                 {/* First Row - Scrolls Left (default direction) */}
-                <Marquee pauseOnHover className="[--duration:60s] [--gap:1.5rem]">
+                <Marquee pauseOnHover className="[--duration:40s] md:[--duration:60s] [--gap:0.75rem] md:[--gap:1.5rem]">
                     {firstRow.map((photo, index) => (
                         <PhotoCard key={`row1-${index}`} src={photo} index={index} />
                     ))}
                 </Marquee>
 
                 {/* Second Row - Scrolls Right (reverse direction) */}
-                <Marquee reverse pauseOnHover className="[--duration:60s] [--gap:1.5rem]">
+                <Marquee reverse pauseOnHover className="[--duration:40s] md:[--duration:60s] [--gap:0.75rem] md:[--gap:1.5rem]">
                     {secondRow.map((photo, index) => (
                         <PhotoCard key={`row2-${index}`} src={photo} index={index + 17} />
                     ))}

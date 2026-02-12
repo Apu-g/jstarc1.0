@@ -151,7 +151,7 @@ export const About = () => {
                 </motion.div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-white/10">
+                <div className="grid grid-cols-3 gap-2 md:gap-8 text-center divide-x divide-white/10">
                     {stats.map((stat, index) => (
                         <motion.div
                             key={stat.id}
@@ -159,12 +159,12 @@ export const About = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.2 }}
-                            className="pt-8 md:pt-0 px-4"
+                            className="px-1 md:px-4"
                         >
-                            <stat.icon className="w-10 h-10 text-primary mx-auto mb-4" />
-                            <div className="text-5xl font-black text-white mb-2">{stat.value}</div>
-                            <div className="text-muted font-medium uppercase tracking-wider text-sm">{stat.label}</div>
-                            {index === 1 && <p className="text-xs text-zinc-500 mt-2">Impacting lives daily</p>}
+                            <stat.icon className="w-6 h-6 md:w-10 md:h-10 text-primary mx-auto mb-2 md:mb-4" />
+                            <div className="text-xl md:text-5xl font-black text-white mb-1 md:mb-2">{stat.value}</div>
+                            <div className="text-muted font-medium uppercase tracking-wider text-[10px] md:text-sm">{stat.label}</div>
+                            {index === 1 && <p className="text-[10px] md:text-xs text-zinc-500 mt-1 md:mt-2 hidden md:block">Impacting lives daily</p>}
                         </motion.div>
                     ))}
                 </div>
